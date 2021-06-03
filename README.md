@@ -1,4 +1,4 @@
-# store_system
+# commercial-trading-appliction
 
 A very big products store application with many selling points.
 this application consists mainly of six parts
