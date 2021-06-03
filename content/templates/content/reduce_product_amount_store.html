@@ -1,0 +1,117 @@
+{% extends './base.html' %}
+{% block content %}
+
+<form method="post" name="form">
+    {% csrf_token %}
+    <div class="select-date text-center font-weight-bold p-3 mb-4">
+
+        <div class="input-group input-group-sm mb">
+            <div class="input-group-prepend">
+              <!-- <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm">تاريخ</span> -->
+
+            </div>
+            <!-- <input type="date" name="date" class="form-control rounded-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required> -->
+        </div>
+
+    </div>
+
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">المخزن</li>
+          <li class="breadcrumb-item">الصنف</li>
+          <li class="breadcrumb-item text-primary font-weight-bold">{{product.name}}</li>
+          <li class="breadcrumb-item">تقليل كمية الصنف</li>
+        </ol>
+      </nav>
+    </div>
+
+
+
+
+
+    {%if product.amount_old %}
+    <div class="form-group row text-danger">
+        <label for="products" class="col-sm-2 font-weight-bold col-form-label" >الكمية بالكرتونة قديم</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" name="last_quantity_packet" min ="0"  max ="{{product.last_quantity_packet}}" class="form-control" placeholder="اكتب  (0)  صفــر اذا كانت الكمية المسحوبة بعدد القطع فقط" required>
+            <input type="text" class="text-primary" value="الموجود بالمخزن {{product.last_quantity_packet}} كرتونة" class="form-control" readonly>
+            <input type="text" class="text-light font-weight-bold bg-primary" value="عدد القطع ف الكرتونة : {{product.last_quantity_per_packet}} " class="form-control" readonly>
+
+          </div>
+        </div>
+    </div>
+    <div class="form-group row text-danger">
+        <label for="products" class="col-sm-2 font-weight-bold col-form-label" >الكمية بالواحدة / بالقطعة جديد قديم</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" name="last_quantity" min ="0"   max ="{{product.amount_old}}"  class="form-control" placeholder="اكتب (0)  صفــر اذا كانت الكمية المسحوبة بعدد الكراتين فقط" required>
+            <input type="text" class="text-primary" value="الموجود بالمخزن {{product.last_quantity}} فطعة" class="form-control" readonly>
+
+          </div>
+        </div>
+    </div>
+    {%endif%}
+
+    {%if product.amount_new %}
+    <div class="form-group row">
+        <label for="products" class="col-sm-2 font-weight-bold col-form-label" >الكمية بالكرتونة جديد</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" name="new_quantity_packet" min ="0"  max ="{{product.quantity_packet}}"  class="form-control" placeholder="اكتب  (0)  صفــر اذا كانت الكمية المسحوبة بعدد القطع فقط" required>
+            <input type="text" class="text-primary" value="الموجود بالمخزن {{product.quantity_packet}} كرتونة" class="form-control" readonly>
+            <input type="text" class="text-light font-weight-bold bg-primary" value="عدد القطع ف الكرتونة : {{product.quantity_per_packet}} " class="form-control" readonly>
+
+          </div>
+        </div>
+    </div>
+    <div class="form-group row ">
+        <label for="products" class="col-sm-2 font-weight-bold col-form-label" >الكمية بالواحدة / بالقطعة جديد</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" name="new_quantity" min ="0"   max ="{{product.amount_new}}"  class="form-control" placeholder="اكتب (0)  صفــر اذا كانت الكمية المسحوبة بعدد الكراتين فقط" required>
+            <input type="text" class="text-primary" value="الموجود بالمخزن {{product.quantity}} قطعة" class="form-control" readonly>
+
+          </div>
+        </div>
+    </div>
+
+    {%endif%}
+    {%if  product.total_quantity %}
+        <div class="d-flex justify-content-around mt-4">
+          <button type="submit" class="btn btn-danger font-weight-bold px-5 " id="btnsubmit" onclick="submitForm()">خصم البضاعة من المخزن ؟!</button>
+        </div>
+      {%else%}
+        <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+          المنتج منتهى من المخزن
+        </div>
+      {%endif%}
+    </form>
+    <div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+      <a href="{%url 'content:product_page' product.id %}">
+          <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+      </a>
+      </div>
+
+
+    {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+      خطأ لم يتم تحديث البيانات . تأكد من اسم المنتج و الكمية الصحيحة
+    </div>
+    {%elif success %}
+    <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+      تم حفظ البيانات
+    </div>
+    {% endif %}
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[0].classList.add('active-link');
+
+</script>
+
+{%endblock%}

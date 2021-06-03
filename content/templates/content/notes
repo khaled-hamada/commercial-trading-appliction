@@ -1,0 +1,135 @@
+ <div class="form-group row">
+      <div class="col-sm-12">
+        <div class="input-group mb-3">
+          <label for="customControlInline"  class="col-sm-6 font-weight-bold col-form-label"> اضغط هذا الزرار فى حالة بيع المنتج بالعبوة كاملة فقط</label>
+          <button type="button"  id="toggle" class="btn col-sm-2  btn-primary font-weight-bold px-5 mx-5">إخفاء</button>
+
+        </div>
+      </div>
+    </div>
+
+  <div class="form-group form-row   text-right  container required" id="sub_product_div">
+
+
+
+      <fieldset class="container my-3 py-3 custom-border" >
+        <legend class="text-primary"> فى حالة بيع الصنف بالتجزئة</legend>
+          <div class="form-row">
+             <div class="col-6">
+               <input type="number" name="quantity_per_unit" form="main_form" min="0" class="form-control" placeholder="الكمية فى الوحدة مثال 1000 جرام / صفر اذا كان البيع بالعبوة فقط" aria-describedby="sub_product_d" required>
+               <small id="sub_product_d" class="form-text text-muted">
+                 الكمية فى الوحدة مثال 1000 جرام / فى العبوة ... او اكتب  صفر اذا كان البيع بالعبوة فقط
+                </small>
+             </div>
+             <div class="col-3">
+               <select class="form-control" form="main_form" id="quantity" name= "mu_id" form="add_form" aria-label="Amount (to the nearest dollar)" required>
+                   <option value=""> اختر الوحدة </option>
+                 {%for mu in mus %}
+                   <option value="{{mu.id}}">{{mu.name}}</option>
+                 {% endfor %}
+               </select>
+             </div>
+
+              <div class="col-3">
+               <input type="number" name="sub_product_prices" form="main_form" min="0" step=".001" class="form-control" placeholder="سعر البيع بالتجزئة" aria-describedby="sub_product_d" required>
+               <small id="sub_product_d" class="form-text text-muted">
+                 اكتب سعر بيع العبوة كاملة بالتجزئة وسيتم حساب سعر بيع الوحدة تلقائيا
+                <br>
+                بمعنى اذا كانت العبوة بها 1000 جرام فان سعر الجرام الواحد  =
+                سعر العبوة بالتجزئة / 1000
+
+                </small>
+             </div>
+             <div class="col-2">
+               <!-- Button trigger modal -->
+                 <button type="button"  class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">
+                   إضافة وحدة جديدة
+                 </button>
+
+                 <!-- Modal -->
+                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                       <div class="modal-header">
+                         <h5 class="modal-title" id="exampleModalLabel">إضافة وحدة جديدة </h5>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                         </button>
+                       </div>
+                       <div class="modal-body">
+
+
+
+
+                           <div class="form-group row">
+                               <label for="products" class="col-sm-2 font-weight-bold col-form-label">اسم الوحدة</label>
+                               <div class="col-sm-10">
+                                 <div class="input-group mb-3">
+                                   <input type="text" class="form-control"  name="unit_name" form="add_form" placeholder="اكتب اسم الوحدة" required>
+                                 </div>
+                               </div>
+                           </div>
+
+
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">إالغاء</button>
+                         <button type="submit" form="add_form" class="btn btn-primary">حفظ</button>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 <!-- Modal end  -->
+
+             </div>
+             <div class="col-2">
+               <!-- Button trigger modal -->
+                 <button type="button"  class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal_2">
+                  حذف وحدة
+                 </button>
+
+                 <!-- Modal -->
+                 <div class="modal fade" id="exampleModal_2" tabindex="-2" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                       <div class="modal-header">
+                         <h5 class="modal-title" id="exampleModalLabel">حذف وحدة خطأ</h5>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                         </button>
+                       </div>
+                       <div class="modal-body">
+
+
+
+
+                           <div class="form-group row">
+                               <label for="products" class="col-sm-2 font-weight-bold col-form-label">اسم الوحدة</label>
+                               <div class="col-sm-10">
+                                 <div class="input-group mb-3">
+                                   <select class="form-control" form="delete_form" id="quantity" name= "mu_id" form="add_form" aria-label="Amount (to the nearest dollar)" required>
+                                       <option value=""> اختر اسم الوحدة</option>
+                                     {%for mu in mus %}
+                                       <option value="{{mu.id}}">{{mu.name}}</option>
+                                     {% endfor %}
+                                   </select>
+                                  </div>
+                               </div>
+                           </div>
+
+
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">إالغاء</button>
+                         <button type="submit" form="delete_form" class="btn btn-danger">حذف</button>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 <!-- Modal end  -->
+
+             </div>
+           </div>
+      </fieldset>
+
+  </div>

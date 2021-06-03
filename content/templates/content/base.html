@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>كافتريا</title>
+    <link rel="stylesheet" href="{% static  'content/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static  'content/css/style.css' %}" />
+    <style>
+        .news {
+            width: 160px
+        }
+
+        .news-scroll a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .breaking-news {
+            background: lemonchiffon;
+        }
+
+        .dot {
+            height: 6px;
+            width: 6px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 2px !important;
+            background-color: rgb(207, 23, 23);
+            border-radius: 50%;
+            display: inline-block
+        }
+        .active-link {
+            background-color: #1abc9c !important;
+
+        }
+
+        .active-link .nav-link {
+            color: white  !important;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            float: none;
+            padding-right: 0.5rem;
+            color: #6c757d;
+            content: "";
+        }
+
+        .breadcrumb-item + .breadcrumb-item::after {
+            float: right;
+            padding-right: 0.5rem;
+            color: red;
+            content: ">";
+        }
+
+        @media print {
+            .no-print{
+              display: None;
+              visibility: hidden;
+
+          }
+            table, th, td,thead {
+                  border: 3px solid black;
+
+      }
+        body,html{
+          margin: 0;
+          padding :0;
+        }
+        .print{
+          margin: 0px !important;
+          padding:  0px !important;
+          width:  100% !important;
+
+          /* padding :0; */
+        }
+         }
+    </style>
+  </head>
+  <body>
+
+
+
+    <div class="fixed-top no-print">
+        
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+                <a class="navbar-brand font-weight-bolder" style="position: fixed; top: 50px; right: 5px;" href="{%url 'content:receipt_net'%}">منظومة الكافيتريا</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="container">
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                        <ul class="navbar-nav ml-auto m-0 p-0">
+
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:store'%}">المخزن <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:sandwitch'  %}">سندوتشات</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:daily_transaction'%}">الحركة اليومية</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:Treasury_receipt'%}">الخزنة</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:withdrawings_all'%}">النثريات</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:monthly_receipt'%}">الحساب الشهري</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:Debts'%}">التجــــار</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:points'%}">النقاط</a>
+                            </li>
+                            {%if user.groups.first.name == "managers" %}
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:new_product_type'%}">اضافة صنف</a>
+                            </li>
+                            {%endif%}
+
+
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:daily_reports'%}">تقارير يومية</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:receipt_net'%}">تصفية الحساب</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" href="{%url 'content:customers-page'%}">العملاء</a>
+                            </li>
+                              {%if  user.groups.first.name == "admin" %}
+                              <li class="nav-item">
+                                  <a class="nav-link font-weight-bold" href="{%url 'content:daily_reports'%}">تسليم الكانتين للضابط الجديد</a>
+                              </li>
+                            {%endif%}
+                        </ul>
+
+
+
+
+                        <!-- <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </form> -->
+                    </div>
+                </div>
+
+                <a href="{%url 'content:customers-bill-details-page'%}" style="position: static; top: 50px; left: 10px;" >
+                    <button class="btn btn-sm btn-warning m-2 my-sm-0 font-weight-bold">الاستعلام عن فاتورة</button>
+                </a>
+                <a href="{%url 'content:search-canteen'%}" style="position: static; top: 50px; left: 10px;" >
+                    <button class="btn btn-sm btn-primary m-2 my-sm-0 font-weight-bold">بحث عن منتج</button>
+                </a>
+                <a href="{%url 'content:change-password'%}" style="position: static; top: 50px; left: 10px;" >
+                    <button class="btn btn-sm btn-brown m-2 my-sm-0 font-weight-bold">تغيير كلمة السر</button>
+                </a>
+                <a href="{%url 'content:logout-page'%}" style="position: static; top: 50px; left: 10px;" >
+                    <button class="btn btn-sm btn-danger m-2 my-sm-0 font-weight-bold">تسجيل الخروج</button>
+                </a>
+
+
+        </nav>
+    </div>
+
+
+
+    <div class="mb-5" style="height: 70px"></div>
+
+    {% block a_unique_name %}
+    <div id="default_container" class=" print container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+
+        {% block content %}
+        {% endblock %}
+
+
+        {% block content_2 %}
+        {% endblock %}
+
+        {% block content_3 %}
+        {% endblock %}
+        {% block content_4 %}
+        {% endblock %}
+        {% block content_5 %}
+        {% endblock %}
+        {% block content_6 %}
+        {% endblock %}
+
+
+    </div>
+    {% endblock %}
+
+    <script
+      src="{% static  'content/js/jquery-3.4.1.min.js' %}"></script>
+    <script
+      src="{% static  'content/js/popper-1.16.1.js' %}"></script>
+    <script
+      src="{% static  'content/js/bootstrap-4.6.0.js' %}"></script>
+      <script
+      src="{% static  'content/js/file.js' %}"></script>
+      <script
+      src="{% static  'content/js/sandwich.js' %}"></script>
+      <script
+      src="{% static  'content/js/flush_forms.js' %}"></script>
+      <script
+      src="{% static  'content/js/update_product.js' %}"></script>
+      <script
+      src="{% static  'content/js/change_password.js' %}"></script>
+
+    <script>
+        $(function(){
+            //to convert arabic numbers to persian numbers
+            var arabicNumbers = ['۰', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            var convert_to_persian_numbers = function (v) {
+                var chars = v.split('');
+                for (var i = 0; i < chars.length; i++) {
+                    if (/\d/.test(chars[i])) {
+                    chars[i] = arabicNumbers[chars[i]];
+                    }
+                }
+                return chars.join('');
+            }
+
+            //to write down the date
+
+            var today_d = new Date();
+            var d = today_d.getDate();
+            var m = today_d.getMonth()+1;
+            var y = today_d.getFullYear();
+            today = d +" / "+m +" / "+y +" "
+            $('.today-date').text(convert_to_persian_numbers(today));
+
+
+
+        });
+
+    </script>
+  </body>
+</html>

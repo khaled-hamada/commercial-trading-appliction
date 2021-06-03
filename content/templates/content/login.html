@@ -1,0 +1,102 @@
+{% load static %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>كافتريا</title>
+    <link rel="stylesheet" href="{% static  'content/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static  'content/css/style.css' %}" />
+    <style>
+        .news {
+            width: 160px
+        }
+
+        .news-scroll a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .breaking-news {
+            background: lemonchiffon;
+        }
+
+        .dot {
+            height: 6px;
+            width: 6px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 2px !important;
+            background-color: rgb(207, 23, 23);
+            border-radius: 50%;
+            display: inline-block
+        }
+    </style>
+  </head>
+  <body>
+
+
+   
+
+    <div class="mb-5" style="height: 200px"></div>
+
+    <div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5 w-25">
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="select-date text-center font-weight-bold p-3 mb-4">
+
+        </div>
+
+        <div class="form-group row mt-5">
+          <div class="col">
+            <div class="input-group mb-3">
+              <input type="text" name="username" class="form-control" placeholder="اسم المستخدم" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col">
+            <div class="input-group mb-3">
+              <input type="password" name="password" class="form-control" placeholder="كلمة السر" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-around mt-4">
+          <button type="submit" class="btn btn-hover font-weight-bold px-5 ">دخول</button>
+        </div>
+
+
+        {% if failed == 1 %}
+        <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+          خطأ في اسم المستخدم او كلمة السر
+        </div>
+        {% endif %}
+        {% if noper == 1 %}
+        <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+          عفواََ هذا المستخدم لا يملك صلاحيات الدخول
+        </div>
+        {% endif %}
+
+
+      </form>
+
+    </div>
+
+
+    <script
+      src="{% static  'content/js/jquery-3.4.1.min.js' %}"></script>
+    <script
+      src="{% static  'content/js/popper-1.16.1.js' %}"></script>
+    <script
+      src="{% static  'content/js/bootstrap-4.6.0.js' %}"></script>
+      <script
+      src="{% static  'content/js/file.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,128 @@
+{% extends './base.html' %}
+
+{% block content %}
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+  <div class=" p-2 rounded">
+    </div>
+</div>
+
+<form class=""  method="post">
+
+  {%csrf_token%}
+  <div class="form-group row">
+      <label for="products" class="col-sm-2 font-weight-bold col-form-label">اســـم المنتج</label>
+      <div class="col-sm-6">
+        <div class="input-group mb-3">
+          <select class="form-control"   name="product_id" aria-label="Amount (to the nearest dollar)" required>
+              <option value="">اختر اسم المنتج</option>
+              {%for product in products%}
+              <option value="{{product.id}}"   >{{product.name}}</option>
+              {%endfor%}
+          </select>
+        </div>
+      </div>
+      <div class=" ">
+        <button type="submit" class="btn btn-sm btn-hover font-weight-bold px-5 ">بحث</button>
+      </div>
+  </div>
+
+</form>
+{%for tpp in data%}
+
+  <div>
+    <nav aria-label="breadcrumb " >
+
+
+        {%if tpp.Point  %}
+            {%if tpp.total_product_quantity > 0 %}
+              <ol class="breadcrumb bg-info font-weight-bold text-light">
+            {%else%}
+              <ol class="breadcrumb bg-danger font-weight-bold text-light">
+            {%endif%}
+          <li class="breadcrumb-item">{{tpp.Point.name}}</li>
+          <li class="breadcrumb-item">{{tpp.product.name}}</li>
+        {%else%}
+            {%if tpp.total_quantity > 0 %}
+              <ol class="breadcrumb bg-info font-weight-bold text-light">
+            {%else%}
+              <ol class="breadcrumb bg-danger font-weight-bold text-light">
+            {%endif%}
+          <li class="breadcrumb-item">المخزن</li>
+          <li class="breadcrumb-item">{{tpp.name}}</li>
+        {%endif%}
+      </ol>
+    </nav>
+  </div>
+
+
+
+
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+
+        <th scope="col">الكمية بالقطعة قديم</th>
+        <th scope="col">الكمية بالقطعة جديد</th>
+        <th scope="col">الكمية الكلية</th>
+        <th scope="col">سعر  بيع القطعة</th>
+        <th scope="col">سعر شراء كلى</th>
+
+        <th scope="col">سعر بيع كلى </th>
+        <th scope="col">تفاصيل الصنف</th>
+
+
+
+
+
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+
+
+        {%if tpp.Point  %}
+          <td>{{tpp.old_amount}}</td>
+          <td>{{tpp.new_amount}}</td>
+          <td>{{tpp.old_amount|add:tpp.new_amount}}</td>
+          <td>{{tpp.product.unit_sell_price}}</td>
+        {%else%}
+          <td>{{tpp.amount_old}}</td>
+          <td>{{tpp.amount_new}}</td>
+          <td>{{tpp.amount_old|add:tpp.amount_new}}</td>
+          <td>{{tpp.unit_sell_price}}</td>
+        {%endif%}
+
+        <td>{{tpp.total_cost}}</td>
+        <td>{{tpp.total_cost_sell}}</td>
+
+        {%if tpp.Point  %}
+          <td> <a href="{% url 'content:point-total-product' tpp.id %}" target="_blank"> اضغط لرؤية تفاصيل الصنف  </a></td>
+        {%else%}
+            <td> <a href="{% url 'content:product_page' tpp.id %}"  target="_blank"> اضغط لرؤية تفاصيل الصنف  </a></td>
+        {%endif%}
+        </tr>
+
+
+
+
+
+
+    </tbody>
+  </table>
+{%endfor%}
+
+<!--
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">اجمالي ثمن شراء البضاعة الموجودة</div>
+    <div class="col-4 font-weight-bolder  p-3">{{total_buy_all}}</div>
+
+  </div>
+
+</div> -->
+
+
+{% endblock %}

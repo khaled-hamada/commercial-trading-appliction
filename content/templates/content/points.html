@@ -1,0 +1,61 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+
+</div>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">اسم النقطة</th>
+        <th scope="col">اسم المسؤول</th>
+        <th scope="col">ثمن شراء البضاعة بالنقطة</th>
+        <th scope="col">ثمن بيع البضاعة بالنقطة</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for point in points %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td><a href="{%url 'content:point_page' point.0.id%}">{{point.0.name}}</a></td>
+
+        <td>
+          {%for point_trader in point.point_user_set.all%}
+          <!-- <a href="{%url 'content:point_trader_page' point_trader.id%}">{{point_trader.user.first_name}} - </a> -->
+                {{point_trader.user.first_name}} -
+          {%endfor%}
+
+        </td>
+        <td>{{point.2}}</td>
+
+        <td>{{point.1}}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-5 bg-dark text-light font-weight-bolder p-3">اجمالي </div>
+    <div class="col-4 font-weight-bolder  p-3">{{total_buy_points}}</div>
+    <div class="col-3 font-weight-bolder  p-3">{{total_sell_points}}</div>
+  </div>
+
+</div>
+
+<script>
+  const navLinks = document.querySelectorAll(".nav-item")
+  for (link of navLinks){
+      link.classList.remove('active-link')
+  }
+  navLinks[7].classList.add('active-link');
+
+</script>
+
+
+{%endblock%}

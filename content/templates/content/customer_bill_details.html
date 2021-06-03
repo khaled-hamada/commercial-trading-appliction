@@ -1,0 +1,223 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="select-date text-center font-weight-bold p-3 mb-4 no-print">
+
+</div>
+
+<div class="no-print">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">العملاء</li>
+      <li class="breadcrumb-item">{{bill.customer.name}}</li>
+      <li class="breadcrumb-item">الفواتير</li>
+      <li class="breadcrumb-item">تفاصيل الفاتورة : {{bill.id}}</li>
+    </ol>
+  </nav>
+</div>
+
+
+
+    <div class="row font-weight-bold justify-content-around mt-5">
+      <p>رقم الفاتورة : <span >{{bill.id}}</span></p>
+      <p>اسم العميل : <span class="font-weight-bold text-primary" >{{bill.customer.name}}</span></p>
+      <p>تاريخ الفاتورة: <span >{{bill.date}}</span></p>
+      <p class="font-weight-bold text-primary" > نوع الفاتورة :
+        {%if bill.bill_type == 0%}
+          <span >فاتـــورة مبيعات</span>
+       {%elif bill.bill_type == 1%}
+          <span class="font-weight-bold text-danger">فاتورة مسترجعة</span>
+       {%endif%}
+       </p>
+
+
+    </div>
+    <input type="number" name="bill_id"  form="form_sell_{{bill.id}}" value="{{bill.id}}"  style="display:None;">
+    <input type="number" name="customer_id"  form="form_sell_{{bill.id}}" value="{{bill.customer.id}}"  style="display:None;">
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">الصنف</th>
+            <th scope="col">ك كرتونة</th>
+            <th scope="col">ك قطعة</th>
+            <th scope="col">عدد الكلى بالقطع</th>
+
+
+            <th scope="col">سعر البيع</th>
+
+            <th scope="col" class="text-danger">الكمية المباعة</th>
+            <th scope="col">الخصم للقطعة</th>
+            <th scope="col">الخصم الكلى</th>
+
+
+
+            <th scope="col">الاجمالي</th>
+            <th scope="col">المطلوب</th>
+              <th scope="col" class="text-danger"> نسبة الخصم</th>
+            <th scope="col">اسم النقطة</th>
+            <th scope="col">الكمية المسترجعة</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {%for pps in bill.all_lines%}
+            <tr>
+              <th scope="row">{{forloop.counter}}</th>
+
+              <td>{{pps.product.name}}</td>
+
+              <td>{{pps.quantity_packet_old|add:pps.quantity_packet_new}}</td>
+              <td>{{pps.quantity_old|add:pps.quantity_new}}</td>
+              <td>{{pps.total_quantity}}</td>
+
+              <td>{{pps.product.unit_sell_price}}</td>
+              {%if bill.bill_type == 0%}
+                <td class="text-danger">{{pps.total_quantity_sold}}</td>
+              {%elif  bill.bill_type == 1 %}
+                  <td class="text-danger">0</td>
+              {% endif %}
+              <td>{{pps.discount_per_unit}}</td>
+              <td>{{pps.total_discount_after_restore}}</td>
+
+
+              <td>{{pps.line_net_cost}}</td>
+              <td>{{pps.required_amount}}</td>
+              <th class="text-danger">{% widthratio pps.total_discount  pps.money_quantity_sell  100 %}%</th>
+
+              <td>{{pps.Point.name}}</td>
+              {%if bill.bill_type == 0%}
+                  <td class="text-danger  font-weight-bold">{{pps.restored_amount}}</td>
+              {%elif  bill.bill_type == 1 %}
+                  <td class="text-danger  font-weight-bold">{{pps.total_quantity_sold}}</td>
+              {% endif %}
+            </tr>
+            {%endfor%}
+
+
+        </tbody>
+
+
+    </table>
+
+    <hr class="">
+    <div class="container mt-1">
+      <div class='row text-center'>
+
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">تكلفة الفاتورة</th>
+            <th scope="col">تكلفة المسترجع </th>
+            <th scope="col">تكلفة المباع</th>
+
+
+            <th scope="col">الخصم</th>
+            <th scope="col">الخصم الاضافى</th>
+            <th scope="col">الخصم الكلى</th>
+
+            <th scope="col">المطلوب</th>
+            <th class="text-danger"> نسبة الخصم</th>
+
+            <th scope="col">ثمن المسترجع </th>
+            <th scope="col">ما تم دفعه </th>
+            <th scope="col">المتبقى</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+
+            {%if bill.bill_type == 0%}
+                <th scope="col">{{bill.total_bill_cost}}</th>
+            {%elif  bill.bill_type == 1 %}
+                <th scope="col">0</th>
+            {% endif %}
+
+
+            {%if bill.bill_type == 0%}
+                <th scope="col" class="text-danger">{{bill.restored_amount_cost}}</th>
+            {%elif  bill.bill_type == 1 %}
+                  <th scope="col" >{{bill.total_bill_cost}}</th>
+            {% endif %}
+
+
+            {%if bill.bill_type == 0%}
+                <th scope="col" class="text-primary">{{bill.total_bill_cost_ar}}</th>
+            {%elif  bill.bill_type == 1 %}
+                  <th scope="col" >0</th>
+            {% endif %}
+
+
+
+            <th scope="col">{{bill.main_discount}}</th>
+            <th scope="col">{{bill.discount}}</th>
+            <th scope="col">{{bill.total_discount}}</th>
+
+            {%if bill.bill_type == 0%}
+                <th scope="col">{{bill.required_amount}}</th>
+            {%elif  bill.bill_type == 1 %}
+                <th scope="col">0</th>
+            {% endif %}
+              <th class="text-danger">{% widthratio bill.total_discount  bill.total_bill_cost_ar  100 %}%</th>
+
+
+            {%if bill.bill_type == 0%}
+              <th scope="col"  class="text-danger">{{bill.restored_amount_cost_ad}}</th>
+            {%elif  bill.bill_type == 1 %}
+              <th scope="col" class="text-danger">{{bill.required_amount}}</th>
+            {% endif %}
+
+
+            {%if bill.bill_type == 0%}
+                <th scope="col">{{bill.given_amount}}</th>
+            {%elif  bill.bill_type == 1 %}
+                <th scope="col">0</th>
+            {% endif %}
+
+
+            {%if bill.bill_type == 0%}
+              <th scope="col">{{bill.remaining_amount}}</th>
+            {%elif  bill.bill_type == 1 %}
+              <th scope="col">0</th>
+            {% endif %}
+
+
+          </tr>
+        </tbody>
+    </table>
+
+
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+    <div class="row  font-weight-bold p-3 mb-4 justify-content-center no-print">
+      <a href="{%url 'content:customer-page' bill.customer.id %}">
+          <button class="btn  btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+      </a>
+
+              <button onclick="window.print();" class="btn col-6  btn-primary font-weight-bold px-5 mx-5">طباعــة</button>
+
+      </div>
+
+
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[7].classList.add('active-link');
+
+    </script>
+
+{%endblock%}

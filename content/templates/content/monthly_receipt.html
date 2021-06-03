@@ -1,0 +1,162 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+
+</div>
+
+
+<div class="form-group row">
+    <div class="col-sm-10">
+      <div class="input-group mb-3">
+
+          <div class="input-group-prepend">
+            <label > الحساب النهائى للكانتين عن الفترة من {{mtc.start_date}} -- الى {{mtc.end_date}}</label>
+
+          </div>
+      </div>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">اساس كانتين</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number" value="{{mtc.canteen_base}}" class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">مديونية للتجار</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.traders_depts|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">مديونية العملاء</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.customers_depts|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">اجمالي البضاعة المتبقية بالمخزن</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.total_products_money|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">اجمالي البضاعة المتبقية بالنقاط</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.total_products_money_points|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">النقدي المسلم للضابط الجديد</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.next_manager_gmoney|floatformat}}" class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">النثريات</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.total_withdrawings|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">الموجود بالخزنة</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.safe_current_money|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">اجمالي ربح الكانتين</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.total_profit|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">اجمالي ربح السندوتشات</label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.total_profit_sandwiches|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 font-weight-bold col-form-label">اجمالي الربح </label>
+    <div class="col-sm-10">
+    <div class="input-group mb-3">
+        <input type="number"  value="{{mtc.total_profit|add:mtc.total_profit_sandwiches|floatformat}}"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" readonly>
+        <div class="input-group-prepend">
+        <span class="input-group-text">جنيه</span>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+<script>
+    const navLinks = document.querySelectorAll(".nav-item")
+    for (link of navLinks){
+        link.classList.remove('active-link')
+    }
+    navLinks[5].classList.add('active-link');
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,339 @@
+{% extends './base.html' %}
+
+{% block content %}
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">العملاء</li>
+      <li class="breadcrumb-item">{{customer.name}}</li>
+    </ol>
+  </nav>
+</div>
+
+<h2 style="padding-top: 10px;" class="text-right">بيانـات العميل</h2>
+
+<div class="trade-info text-right" >
+    <div class="info">
+        - <span>اســم العميل: </span> <span>{{customer.name}}</span>
+    </div>
+    <div class="info">
+        - <span> العنوان:</span> <span>{{customer.address}}</span>
+    </div>
+    <div class="info">
+       - <span> رقم الهاتف:</span> <span>{{customer.phone_number}}</span>
+    </div>
+    <div class="info">
+       - <span> تاريخ بداية التعامل مع المؤسسة</span> <span>{{customer.date.date}}</span>
+    </div>
+    <div class="info font-weight-bold text-danger">
+       - <span> مديونية العميل : </span> <span>{{customer.remaining_money}}</span>
+    </div>
+
+
+</div>
+  {%if user.groups.first.name == "managers"%}
+<div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+  <div class="mx-2 ">
+      <a href="{%url 'content:customer-payment' customer.id%}">
+          <button class="btn btn-hover font-weight-bold px-5">تحصيــــل فاتـــورة</button>
+      </a>
+      </div>
+
+
+        <div class="">
+          <a href="{%url 'content:restore-customer-bill' customer.id  %}">
+              <button class="btn  btn-danger font-weight-bold px-5 mx-2">استرجاع فاتورة</button>
+          </a>
+          </div>
+
+
+        <div class="">
+          <a href="{%url 'content:confirm-restore-customer-bill' customer.id  %}">
+              <button class="btn  btn-danger font-weight-bold px-5 mx-2">تاكيد استرجاع فاتورة</button>
+          </a>
+          </div>
+        <div class="">
+          <a href="{%url 'content:customer_give_payment'  customer.id  %}">
+              <button class="btn  btn-hover font-weight-bold px-5 mx-2">دفع ثمن فاتورة مسترجعة</button>
+          </a>
+          </div>
+
+
+
+
+        <div class="">
+          <a href="{%url 'content:customer_all_unpaid_bills' customer.id %}">
+              <button class="btn  btn-info font-weight-bold px-5 mx-2">كشف ب فواتير العميل الغير مدفوعة</button>
+          </a>
+          </div>
+
+        <div class="">
+          <a href="{%url 'content:customers-page'  %}">
+              <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+          </a>
+          </div>
+
+  </div>
+  {%endif%}
+{% endblock %}
+
+
+{% block content_2 %}
+<div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+
+
+<h2 style="padding-top: 10px;" class="text-right">فواتيــر العميل الغير مدفوعة</h2>
+
+<table class="table">
+    <thead >
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">رقم الفاتورة / التفاصيل</th>
+        <th scope="col">اسم المسلم</th>
+        <th scope="col">المبلغ الكلى</th>
+        <th scope="col">الخصم</th>
+        <th scope="col">المطلوب</th>
+
+        <th scope="col" class="text-danger"> نسبة الخصم</th>
+
+        <th scope="col">ما تم دفعه</th>
+        <th scope="col">المتبقى</th>
+        <th scope="col">التاريخ</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {%if un_paid_bills %}
+        {%for pill in un_paid_bills%}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+
+          <td><a href="{%url 'content:customer-bill-details' pill.id%}">{{pill.id}} - اضغط لرؤية التفاصيل</a></td>
+          <td><a href="{%url 'content:manager' pill.manager.id%}">{{pill.manager.user.first_name}}</a></td>
+          <td>{{pill.total_bill_cost}}</td>
+          <td>{{pill.total_discount}}</td>
+          <td>{{pill.required_amount}}</td>
+          <th class="text-danger">{% widthratio pill.total_discount  pill.total_bill_cost_ar  100 %}%</th>
+
+          <td>{{pill.given_amount}}</td>
+          <td>{{pill.remaining_amount}}</td>
+          <td>{{pill.date}}</td>
+
+        </tr>
+        {%endfor%}
+    {%endif%}
+    </tbody>
+  </table>
+
+
+  </div>
+{% endblock %}
+{% block content_3 %}
+<div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+<h2 style="padding-top: 10px;" class="text-right">فواتيــر العميل المدفوعة</h2>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">رقم الفاتورة / التفاصيل</th>
+        <th scope="col">اسم المسلم</th>
+        <th scope="col">المبلغ الكلى</th>
+        <th scope="col">الخصم</th>
+        <th scope="col">المطلوب</th>
+        <th scope="col" class="text-danger"> نسبة الخصم</th>
+
+        <th scope="col">ما تم دفعه</th>
+        <th scope="col">المتبقى</th>
+        <th scope="col">التاريخ</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {%if paid_bills %}
+        {%for pill in paid_bills%}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td><a href="{%url 'content:customer-bill-details' pill.id%}">{{pill.id}} - اضغط لرؤية التفاصيل</a></td>
+          <td><a href="{%url 'content:manager' pill.manager.id%}">{{pill.manager.user.first_name}}</a></td>
+          <td>{{pill.total_bill_cost}}</td>
+          <td>{{pill.total_discount}}</td>
+          <td>{{pill.required_amount}}</td>
+          <th class="text-danger">{% widthratio pill.total_discount  pill.total_bill_cost_ar  100 %}%</th>
+
+          <td>{{pill.given_amount}}</td>
+          <td>{{pill.remaining_amount}}</td>
+          <td>{{pill.date}}</td>
+
+        </tr>
+      {%endfor%}
+      {%endif%}
+    </tbody>
+  </table>
+
+    </div>
+{% endblock %}
+
+
+{% block content_4 %}
+<div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+<h2 style="padding-top: 10px;" class="text-right">فواتير العميل المسترجعة</h2>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">رقم الفاتورة / التفاصيل</th>
+        <th scope="col">اسم المسلم</th>
+        <th scope="col">المبلغ الكلى</th>
+        <th scope="col">الخصم</th>
+        <th scope="col">المطلوب</th>
+        <!-- <th scope="col" class="text-danger"> نسبة الخصم</th> -->
+
+        <th scope="col">ما تم دفعه</th>
+        <th scope="col">المتبقى</th>
+        <th scope="col">التاريخ</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {%if retunred_bills %}
+        {%for pill in retunred_bills%}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td><a href="{%url 'content:customer-bill-details' pill.id%}">{{pill.id}} - اضغط لرؤية التفاصيل</a></td>
+          <td><a href="{%url 'content:manager' pill.manager.id%}">{{pill.manager.user.first_name}}</a></td>
+          <td>{{pill.total_bill_cost}}</td>
+          <td>{{pill.total_discount}}</td>
+          <td>{{pill.required_amount}}</td>
+          <!-- <th class="text-danger">{% widthratio pill.total_discount  pill.total_bill_cost_ar  100 %}%</th> -->
+
+          <td>{{pill.given_amount}}</td>
+          <td>{{pill.remaining_amount}}</td>
+          <td>{{pill.date}}</td>
+
+        </tr>
+      {%endfor%}
+      {%endif%}
+    </tbody>
+  </table>
+
+    </div>
+    {% endblock %}
+
+    {% block content_5 %}
+    <div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+    <h2 style="padding-top: 10px;" class="text-right  text-primary">فواتير العميل النقدية المدفوعة</h2>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <!-- <th scope="col">رقم الفاتورة / التفاصيل</th> -->
+            <th scope="col">اسم المسلم</th>
+            <th scope="col">المستلم</th>
+
+            <th scope="col">المبلغ السابق</th>
+
+            <th scope="col">المبلغ المدفوع</th>
+            <th scope="col">الخصم</th>
+
+            <th scope="col">المبلغ الحالى</th>
+
+            <th scope="col">التاريخ</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {%if paid_given_bill %}
+            {%for pill in paid_given_bill%}
+            <tr>
+              <th scope="row">{{forloop.counter}}</th>
+              <!-- <td><a href="{%url 'content:customer-bill-details' pill.id%}">{{pill.id}} - اضغط لرؤية التفاصيل</a></td> -->
+              <td><a href="{%url 'content:manager' pill.t_user.id%}">{{pill.t_user.user.first_name}}</a></td>
+              <td>{{pill.g_user.name}}</td>
+
+                <td>{{pill.previos_amount}}</td>
+
+              <td>{{pill.amount}}</td>
+              <td>{{pill.discount}}</td>
+
+              <td>{{pill.current_amount}}</td>
+
+
+
+              <td>{{pill.date}}</td>
+
+            </tr>
+          {%endfor%}
+          {%endif%}
+        </tbody>
+      </table>
+
+        </div>
+    {% endblock %}
+
+
+
+
+
+
+    {% block content_6 %}
+      <div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+      <h2 style="padding-top: 10px;" class="text-right text-danger">فواتير العميل النقدية المسترجعة</h2>
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <!-- <th scope="col">رقم الفاتورة / التفاصيل</th> -->
+              <th scope="col">اسم المسلم</th>
+              <th scope="col">المستلم</th>
+
+              <th scope="col">المبلغ السابق</th>
+
+              <th scope="col">المبلغ المدفوع</th>
+              <th scope="col">الخصم</th>
+
+              <th scope="col">المبلغ الحالى</th>
+
+              <th scope="col">التاريخ</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {%if restored_paid_bills %}
+              {%for pill in restored_paid_bills%}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <!-- <td><a href="{%url 'content:customer-bill-details' pill.id%}">{{pill.id}} - اضغط لرؤية التفاصيل</a></td> -->
+                <td><a href="{%url 'content:manager' pill.t_user.id%}">{{pill.t_user.user.first_name}}</a></td>
+                <td>{{pill.g_user.name}}</td>
+
+                <td>{{pill.previos_amount}}</td>
+
+                <td>{{pill.amount}}</td>
+                <td>{{pill.discount}}</td>
+
+                <td>{{pill.current_amount}}</td>
+
+
+
+                <td>{{pill.date}}</td>
+
+              </tr>
+            {%endfor%}
+            {%endif%}
+          </tbody>
+        </table>
+
+          </div>
+
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[11].classList.add('active-link');
+
+    </script>
+{% endblock %}

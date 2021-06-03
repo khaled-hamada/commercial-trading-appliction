@@ -1,0 +1,119 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+
+</div>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">الاسم </th>
+        <th scope="col">المبلغ</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <th scope="row">1</th>
+        <td>بضاعة نقط شراء</td>
+        <td>{{mtc.total_products_money_points|floatformat}}</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>بضاعة مخزن شراء</td>
+        <td>{{mtc.total_products_money|floatformat}}</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>سوسيس شراء</td>
+        <td>{{sand_st}}</td>
+      </tr>
+
+      <tr>
+        <th scope="row">4</th>
+        <td>مديونية العملاء</td>
+        <td>{{mtc.customers_depts|floatformat}}</td>
+      </tr>
+
+      <tr>
+        <th scope="row">5</th>
+        <td>نقدى بالخزنة</td>
+        <td>{{mtc.safe_current_money|floatformat}}</td>
+      </tr>
+      <tr class = "text-primary font-weight-bold" >
+        <th scope="row" >6</th>
+        <td>الاجمالى</td>
+        <td>{{total_money_with_customers_d}}</td>
+      </tr>
+
+
+      <tr>
+        <th scope="row">7</th>
+        <td>مديونية التجار</td>
+        <td>{{mtc.traders_depts}}</td>
+      </tr>
+
+      <tr  class ="text-primary font-weight-bold">
+        <th scope="row"    >8</th>
+        <td> <span class ="text-danger font-weight-bold"> الصافى :</span> الاجمالى   -  مديونية التجار</td>
+        <td>{{total_net|floatformat}}</td>
+      </tr>
+      <!-- <tr>
+        <th scope="row">6</th>
+        <td>فرق الضابط الجديد</td>
+        <td>{{next_manager_gmoney}}</td>
+      </tr> -->
+      <tr class = "text-danger font-weight-bold">
+        <th scope="row">9</th>
+        <td>إجمالى الخصومات <a href="{%url 'content:all-discount-bills' %}"> اضغط لرؤية التفاصيل</a> </td>
+        <td>{{total_discounts|floatformat}}</td>
+      </tr>
+      <tr>
+        <th scope="row">10</th>
+        <td>نثريات</td>
+        <td>{{mtc.total_withdrawings|floatformat}}</td>
+      </tr>
+      <tr>
+        <th scope="row">11</th>
+        <td > فلوس نقدى للمدير  <span class="text-primary font-weight-bold">الصافى  - مديونية العملاء </span> </td>
+        <td>{{given_boss_gmoney|floatformat}}</td>
+      </tr>
+      <tr>
+        <th scope="row">12</th>
+        <td>اجمالى الفلوس  <span class="font-weight-bold text-danger"> ( الصافى + النثريات) </span> <span class="font-weight-bold text-primary"> ---> الربح</span></td>
+        <td>{{total_net|add:mtc.total_withdrawings}}</td>
+      </tr>
+      {%if user.groups.first.name == "managers"%}
+          <!-- <tr>
+            <th scope="row">13</th>
+            <td> نسبة 3% ربح</td>
+            <td>{{three_percentage}}</td>
+          </tr>
+          <tr>
+            <th scope="row">14</th>
+            <td> نسبة 1% ربح</td>
+            <td>{{one_percentage}}</td>
+          </tr> -->
+      {%endif%}
+
+    </tbody>
+</table>
+
+
+<script>
+  const navLinks = document.querySelectorAll(".nav-item")
+  for (link of navLinks){
+      link.classList.remove('active-link')
+  }
+  navLinks[10].classList.add('active-link');
+
+</script>
+
+
+{% endblock %}

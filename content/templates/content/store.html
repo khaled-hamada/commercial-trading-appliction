@@ -1,0 +1,84 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+  <div class="select-date text-center font-weight-bold p-3 mb-4">
+    <div class="today-date bg-light p-2 rounded">
+
+    </div>
+  </div>
+<div class="table-container-big">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">الصنف</th>
+
+        <th scope="col">كرتونة قديم</th>
+        <th scope="col">عدد / كرتونة</th>
+        <th scope="col">قطعة قديم</th>
+        <th scope="col">سعر شراء</th>
+
+        <th scope="col">كرتونة جديد</th>
+        <th scope="col">عدد / كرتونة</th>
+        <th scope="col">قطعة جديد</th>
+        <th scope="col">سعر شراء</th>
+
+        <!-- <th scope="col">سعر الشراء</th> -->
+        <th scope="col">سعر البيع</th>
+        <th scope="col">الكمية الكلية/قطعة</th>
+        <th scope="col">الاجمالي</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+
+        {%if p.total_quantity  == 0%}
+          <tr class = "text-danger text-bold text-heavy">
+        {%else%}
+          <tr>
+        {%endif%}
+        <th scope="row">{{forloop.counter}}</th>
+        <td><a href="{%url 'content:product_page' p.id%}">{{p.name}}</a></td>
+
+        <td>{{p.last_quantity_packet}}</td>
+        <td>{{p.last_quantity_per_packet}}</td>
+        <td>{{p.last_quantity}}</td>
+        <td>{{p.last_unit_buy_price}}</td>
+
+        <td>{{p.quantity_packet}}</td>
+        <td>{{p.quantity_per_packet}}</td>
+        <td>{{p.quantity}}</td>
+        <td>{{p.unit_buy_price}}</td>
+
+        <!-- <td>{{p.unit_buy_price}}</td> -->
+        <td>{{p.unit_sell_price}}</td>
+        <td>{{p.total_quantity}}</td>
+        <td>{{p.total_cost}}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+  <hr class="my-5">
+  <div class="container mt-5">
+    <div class='row text-center'>
+      <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+      <div class="col-8 font-weight-bolder  p-3">{{total}}</div>
+    </div>
+
+  </div>
+  </div>
+
+  <script>
+          const navLinks = document.querySelectorAll(".nav-item")
+          for (link of navLinks){
+              link.classList.remove('active-link')
+          }
+          navLinks[0].classList.add('active-link');
+
+  </script>
+
+
+{% endblock %}

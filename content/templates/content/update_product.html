@@ -1,0 +1,132 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+
+  <div class="select-date text-center font-weight-bold p-3 mb-4">
+    <div class="bg-light p-2 rounded">
+      {{trader.name}}
+    </div>
+  </div>
+
+    <div class="form-group row">
+        <label for="products" class="col-sm-2 font-weight-bold col-form-label">اســـم المنتــــج</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <select class="form-control" id="search_list_update_product" name= "product_id" aria-label="Amount (to the nearest dollar)" required>
+              {%for  product in products %}
+                <option value="{{product.id}}">{{product.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+    </div>
+  {%for  product in products %}
+
+  <div class="" id="update_product_{{product.id}}">
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+        <input type="number" name="product_id" value="{{product.id}}"  style="display:None;">
+    <div class="form-group row text-danger">
+      <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">الكمية بالمخزن</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="text"  class="form-control text-danger"   value="  {{ product.total_quantity}}  قطعة" readonly>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row text-danger">
+      <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">اخر سعر شراء للمنتج </label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="text"  class="form-control text-danger"  value=" ثمن شراء الكرتونة -- {{product.packet_price }} , عدد القطع فى الكرتونة  -- {{product.quantity_per_packet}} -- ثمن شراء القطعة الواحدة {{product.unit_buy_price}}" readonly>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label"></label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+            <label for="" class = "text-primary text-bold " style="font-size:1.4em;"> برجاء مراجعة صفحة المنتج و تحديث الاسعار اولا فى حالة تغير السعر عن اخر سعر للصنف </label>
+          </div>
+      </div>
+    </div>
+
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-3 font-weight-bold col-form-label">الكمية بالكرتونة</label>
+      <div class="col-sm-9">
+        <div class="input-group mb-3">
+          <input type="number" min="0" placeholder="عدد الكراتين الكاملة --<  اكتب صفر ان لم يوجد" name="quantity_packet" class="form-control" id="quantity" aria-label="Amount (to the nearest dollar)" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-3 font-weight-bold col-form-label">الكمية بالواحدة ان وجد ؟</label>
+      <div class="col-sm-9">
+        <div class="input-group mb-3">
+          <input type="number" min="0" placeholder="عدد القطع الفرط خارج الكرتونة ان وجد -- اكتب صفر ان لم يوجد" name="quantity" class="form-control" id="quantity" aria-label="Amount (to the nearest dollar)" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-3 font-weight-bold col-form-label">سعر شراء الكرتونة</label>
+      <div class="col-sm-9">
+        <div class="input-group mb-3">
+          <input type="number" min="0" step=".001" max="{{product.packet_price}}" placeholder="ثمن شراء الكرتونة الواحدة " name="packet_price" class="form-control" id="quantity" aria-label="Amount (to the nearest dollar)" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-3 font-weight-bold col-form-label">عدد القطع فى الكرتونة الواحدة</label>
+      <div class="col-sm-9">
+        <div class="input-group mb-3">
+          <input type="number" name="quantity_per_packet" min="0"  max="{{product.quantity_per_packet}}"  placeholder="عدد القطع فى الكرتونة الواحدة وليكن مثلا 20 قطعة لكل كرتونة"  class="form-control" id="quantity" aria-label="Amount (to the nearest dollar)" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row border border-2 border-rounded">
+        <label for="inputPassword"   class="col-sm-2 font-weight-bold col-form-label">صورة الفاتورة</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+          <input type="file" name="bill_file" value="" required>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-around mt-4">
+      <button type="submit" class="btn btn-hover font-weight-bold px-5 ">اضافة</button>
+    </div>
+  </form>
+  </div>
+{% endfor %}
+
+  <div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+    <a href="{%url 'content:trader_page' trader.id %}">
+        <button class="btn y btn-warning font-weight-bold px-5 mx-2">رجوع</button>
+    </a>
+    </div>
+
+
+
+  {% if failed == 1 %}
+  <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+    خطأ لم يتم تحديث البيانات . تأكد من  مطابقة السعر الجديد لاخر سعر وكذلك عدد القطع فى الكرتونة الواحدة
+    ان كان هناك اختلاف  برجاء تحديث الاسعار فى صفحة المنتج نفسه من زرار التحديث
+  </div>
+  {%elif success %}
+  <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+    تم حفظ البيانات
+  </div>
+  {% endif %}
+
+{% endblock %}

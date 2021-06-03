@@ -1,0 +1,102 @@
+{% extends './base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+  <div class="bg-light p-2 rounded">
+
+  </div>
+</div>
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">النثريات</li>
+      <li class="breadcrumb-item">حذف نثرية</li>
+
+    </ol>
+  </nav>
+</div>
+
+  <div class="form-group row">
+      <label for="products" class="col-sm-2 font-weight-bold col-form-label">اســـم النثرية</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <select class="form-control" id="search_list"  aria-label="Amount (to the nearest dollar)" >
+              <option value="">اختر وصف النثرية</option>
+              {%for w in all_with %}
+              <option value="{{w.id}}"  >{{w.descreption}}</option>
+              {%endfor%}
+          </select>
+        </div>
+      </div>
+  </div>
+{%for w in all_with %}
+
+  <div id="sell_product_{{w.id}}">
+  <form method="post">
+    {%csrf_token%}
+
+      <input type="number" name = "witd_id"  value="{{w.id}}"  style="display:None;">
+        <div class="form-group row text-danger">
+            <label for="products" class="col-sm-2 font-weight-bold col-form-label" >المبلغ</label>
+            <div class="col-sm-10">
+              <div class="input-group mb-3">
+                <input type="text" class="text-primary form-control" value="{{w.money_amount}}" class="form-control" readonly>
+
+              </div>
+            </div>
+        </div>
+        <div class="form-group row text-danger">
+            <label for="products" class="col-sm-2 font-weight-bold col-form-label" >التاريخ</label>
+            <div class="col-sm-10">
+              <div class="input-group mb-3">
+                <input type="text" class="text-primary form-control" value="{{w.day}}" class="form-control" readonly>
+
+              </div>
+            </div>
+        </div>
+        <hr class="my-5">
+
+          <div class="text-center container  row font-weight-bolder form-group " >
+            <input style ="width:250px;" type="number" name="money_amount" min="{{w.money_amount}}"  max="{{w.money_amount}}"  step=".01"  placeholder="اكتب المبلغ مرة اخرى للتاكيد" required >
+          </div>
+
+
+
+        <div class="d-flex justify-content-around mt-4">
+          <button type="submit"   class="btn btn-danger font-weight-bold px-5 ">حذف ؟</button>
+        </div>
+
+    </form>
+  </div>
+
+  {%endfor%}
+      <div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+      <a href="{%url 'content:withdrawings_all'  %}">
+          <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+      </a>
+      </div>
+
+
+    {% if failed == 1 %}
+      <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+        خطأ لم يتم تحديث البيانات . تأكد من المبلغ الصحيح واسم النثرية
+      </div>
+    {%elif success %}
+      <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+        تم حفظ البيانات
+      </div>
+    {% endif %}
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[7].classList.add('active-link');
+
+    </script>
+
+
+{%endblock%}

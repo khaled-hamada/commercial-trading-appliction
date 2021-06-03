@@ -1,0 +1,172 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+
+</div>
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">النقاط</li>
+      <li class="breadcrumb-item">{{point.name}}</li>
+      <li class="breadcrumb-item">تسجيل مدفوعات النقطة</li>
+    </ol>
+  </nav>
+</div>
+
+    <div class="form-group row">
+      <label for="products" class="col-sm-2 font-weight-bold col-form-label">اســـم العميل</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <select class="form-control" id="search_list"    aria-label="Amount (to the nearest dollar)" >
+              <option value="">اختر اسم العميل</option>
+
+              {%for bill in bills%}
+                 <option value="{{bill.customer.id}}"  >{{bill.customer.name}}</option>
+              {%endfor%}
+          </select>
+        </div>
+      </div>
+    </div>
+    {% for bill in bills %}
+  <div id="sell_product_{{bill.customer.id}}">
+    <div class="row font-weight-bold justify-content-around mt-5">
+      <p>رقم الفاتورة : <span >{{bill.id}}</span></p>
+      <p>اسم العميل : <span class="font-weight-bold text-primary" >{{bill.customer.name}}</span></p>
+      <p>تاريخ الفاتورة: <span >{{bill.date}}</span></p>
+
+
+    </div>
+    <input type="number" name="bill_id"  form="form_sell_{{bill.id}}" value="{{bill.id}}"  style="display:None;">
+    <input type="number" name="customer_id"  form="form_sell_{{bill.id}}" value="{{bill.customer.id}}"  style="display:None;">
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">الصنف</th>
+            <th scope="col">ك.ق</th>
+            <th scope="col">ق.ق</th>
+            <th scope="col">ك.ج</th>
+            <th scope="col">ق.ج</th>
+            <th scope="col">سعر البيع</th>
+            <th scope="col">الخصم للقطعة</th>
+            <th scope="col">الخصم الكلى</th>
+
+            <th scope="col">الاجمالي</th>
+            <th scope="col">المطلوب</th>
+            <th scope="col" class="text-danger"> نسبة الخصم</th>
+            <th scope="col">اسم النقطة</th>
+
+            <th scope="col" class="text-danger"> استرجاع ؟</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+        {% for pps in bill.all_lines %}
+          {%if pps.taken_status == 0%}
+            <tr>
+              <th scope="row">{{forloop.counter}}</th>
+
+              <td>{{pps.product.name}}</td>
+              <td>{{pps.quantity_packet_old}}</td>
+              <td>{{pps.quantity_old}}</td>
+              <td>{{pps.quantity_packet_new}}</td>
+              <td>{{pps.quantity_new}}</td>
+              <td>{{pps.product.unit_sell_price}}</td>
+              <td>{{pps.discount_per_unit}}</td>
+              <td>{{pps.total_discount}}</td>
+              <td>{{pps.money_quantity_sell}}</td>
+              <td>{{pps.required_amount}}</td>
+                <th class="text-danger">{% widthratio pps.total_discount  pps.money_quantity_sell  100 %}%</th>
+              <td>{{pps.Point.name}}</td>
+              <td > <a class="text-danger" href="{%url 'content:restore_point_bill_sell' pps.id %}"> استرجاع الفاتورة ؟</a> </td>
+
+
+            </tr>
+          {%endif%}
+
+
+        {%endfor%}
+        </tbody>
+
+
+    </table>
+
+    <hr class="my-5">
+    <div class="container mt-5">
+      <div class='row text-center'>
+
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">تكلفة الفاتورة</th>
+            <th scope="col">الخصم</th>
+            <th scope="col">المطلوب</th>
+            <th class="text-danger"> نسبة الخصم</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <th scope="col">{{bill.total_bill_cost}}</th>
+            <th scope="col">{{bill.total_discount}}</th>
+            <th scope="col">{{bill.required_amount}}</th>
+            <th class="text-danger">{% widthratio bill.total_discount  bill.total_bill_cost_ar  100 %}%</th>
+
+          </tr>
+        </tbody>
+    </table>
+
+            <div class="col-3 bg-dark text-light font-weight-bolder p-3">المطلوب من العميل</div>
+            <div class="col-3 font-weight-bolder  p-3">{{bill.required_amount}}</div>
+          <div class="col-5 font-weight-bolder  p-3">
+            <input type="number" name="total_money" form="form_sell_{{bill.id}}" min ="0" max="{{bill.required_amount}}" step=".01" class="form-control " placeholder="اكتب المبلغ المدفوع " required >
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+    <form method="post" id="form_sell_{{bill.id}}" >
+        {% csrf_token %}
+        <div class="d-flex justify-content-around mt-4">
+          <button type="submit" class="btn btn-hover font-weight-bold px-5 ">اضافة</button>
+        </div>
+    </form>
+
+      </div>
+    {% endfor %}
+
+    <div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+      <a href="{%url 'content:point_page' point.id %}">
+          <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+      </a>
+      </div>
+
+    {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+      خطأ لم يتم تحديث البيانات . تأكد من  المبلغ
+    </div>
+    {%elif success %}
+    <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+      تم حفظ البيانات
+    </div>
+    {% endif %}
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[7].classList.add('active-link');
+
+    </script>
+
+{%endblock%}

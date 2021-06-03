@@ -1,0 +1,60 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+    {%if user.groups.first.name == "managers"%}
+  <div class="mx-2 ">
+      <a href="{%url 'content:add_trader'  0 %}">
+          <button class="btn btn-hover font-weight-bold px-5">إضـافة تاجــر</button>
+      </a>
+  </div>
+  {%endif%}
+</div>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">اسم التاجر</th>
+        <th scope="col">العنوان</th>
+        <th scope="col">المبلغ الكلى </th>
+        <th scope="col">ما تم دفعه</th>
+        <th scope="col">الباقى</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for trader in traders %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td><a href="{%url 'content:trader_page' trader.id%}">{{trader.name}}</a></td>
+        <td>{{trader.address}}</td>
+        <td>{{trader.total_money}}</td>
+        <td>{{trader.given_money}}</td>
+        <td>{{trader.remaining_money}}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-6 bg-dark text-light font-weight-bolder p-3">اجمالي </div>
+    <div class="col-2 font-weight-bolder  p-3">{{total_traders_money}}</div>
+    <div class="col-2 font-weight-bolder  p-3">{{total_traders_given}}</div>
+    <div class="col-2 font-weight-bolder  p-3">{{total_traders_remain}}</div>
+  </div>
+
+</div>
+<script>
+  const navLinks = document.querySelectorAll(".nav-item")
+  for (link of navLinks){
+      link.classList.remove('active-link')
+  }
+  navLinks[6].classList.add('active-link');
+
+</script>
+
+{% endblock %}

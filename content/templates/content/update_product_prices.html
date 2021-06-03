@@ -1,0 +1,144 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+
+  <div class="select-date text-center font-weight-bold p-3 mb-4">
+    <div class="bg-light p-2 rounded text-primary">
+    اسم الصنف  :   {{product.name}}
+    </div>
+  </div>
+
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">المخزن</li>
+        <li class="breadcrumb-item">الصنف</li>
+        <li class="breadcrumb-item">تحديث سعر الصنف</li>
+      </ol>
+    </nav>
+  </div>
+
+
+<div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+  <a href="{%url 'content:product_page' product.id %}">
+      <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+  </a>
+  </div>
+  <form method="post" >
+    {% csrf_token %}
+    <div class="form-group row">
+        <label for="inputPassword"  class="col-sm-2 font-weight-bold col-form-label text-danger">سعر شراء الكرتونة القديم</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" value="{{product.packet_price}}"  min="0.0" step=".01" class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" disabled readonly>
+            <div class="input-group-prepend">
+              <span class="input-group-text">جنيه</span>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputPassword"  class="col-sm-2 font-weight-bold col-form-label">سعر شراء الكرتونة</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" name="new_packet_price"  placeholder="السعر الجديد للكرتونة -- اكتب صفــر فى حالة عدم تغير السعر " min="0.0" step=".0001" class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" required>
+            <div class="input-group-prepend">
+              <span class="input-group-text">جنيه</span>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPassword"  class="col-sm-2 font-weight-bold col-form-label text-danger">الكمية بالواحدة -قديم</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" value="{{product.quantity_per_packet}}"  min="0.0" step=".01" class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" disabled readonly>
+            <div class="input-group-prepend">
+
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">الكمية بالواحدة</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="number" min="0" placeholder="عدد الوحدات / القطع فى الكرتونة الواحدة --> اكتب صفـــر فى حالة عدم تغير عدد القطع " name="new_packet_quantity" class="form-control" id="quantity" aria-label="Amount (to the nearest dollar)" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputPassword"  class="col-sm-2 font-weight-bold col-form-label text-danger">سعر البيع قديم</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" value="{{product.unit_sell_price}}"  min="0.0" step=".0001" class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" disabled readonly>
+            <div class="input-group-prepend">
+              <span class="input-group-text">جنيه</span>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+      <label for="inputPassword"  class="col-sm-2 font-weight-bold col-form-label">سعر البيع</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="number"   placeholder="سعر بيع القطعــة الواحدة بنقاط التجزئة -- اكتب صفر فى حالة عدم تغير سعر البيع " name="new_unit_sell_price"  step=".01"  class="form-control" id="price-for-unit" aria-label="Amount (to the nearest dollar)" required>
+          <div class="input-group-prepend">
+            <span class="input-group-text">جنيه</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="inputPassword"   class="col-sm-2 font-weight-bold col-form-label">الوصف</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <textarea class="form-control"   name="descreption" aria-label="With textarea" >{{product.descreption}}</textarea>
+          </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-around mt-4">
+      <button type="submit" class="btn btn-primary btn-hover font-weight-bold px-5 ">اضافة</button>
+
+    </div>
+  </form>
+
+  {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+         عفوا لم يتم تحديث بيانات المنتج فى قاعدة البيانات  برجاء انهاء كل الكمية القديمة من المنتج
+         القديم اولا قبل تسجيل تحديث  ثانى للمنتج
+         <br>-----
+         <span class="text-primary">
+         فى حالة فشل تحديث سعر البيع تاكد ان السعر الجديد اكبر من او يساوى السعر القديــم
+         </span>
+         <br>---
+         <span class="text-info">
+         فى حالة الاصرار على تغير سعر البيع لسعر اقل من السعر القديم برجاء مراجعة ادمن المنظومة
+         </span>
+    </div>
+  {%elif success %}
+  <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+    تم حفظ البيانات
+  </div>
+  {% endif %}
+
+  <script>
+    const navLinks = document.querySelectorAll(".nav-item")
+    for (link of navLinks){
+        link.classList.remove('active-link')
+    }
+    navLinks[0].classList.add('active-link');
+
+</script>
+
+
+{% endblock %}

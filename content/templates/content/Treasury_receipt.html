@@ -1,0 +1,70 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+
+<div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+    {%if user.groups.first.name == "managers"%}
+  <div class=" ">
+      <a href="{%url 'content:treasury_transactions'%}">
+          <button class="btn btn-hover font-weight-bold px-5">إضافــة / سحـــب من الخزنة</button>
+      </a>
+  </div>
+  {%endif%}
+</div>
+<div class="row  font-weight-bold  justify-content-center">
+  <div class=" ">
+      <p>كشف بحساب الخزنة عن {{safe.name}} </p>
+  </div>
+</div>
+
+
+
+<div class="table-container-big">
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">التاريخ</th>
+        <th scope="col">المبلغ</th>
+        <th scope="col">المسلم</th>
+        <th scope="col-3">ملاحظات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in transactions %}
+        {% if t.money_amount <= 0 %}
+          <tr class="text-danger  font-weight-bold">
+        {%else%}
+          <tr>
+        {%endif%}
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{t.day}}</td>
+        <td>{{t.money_amount}}</td>
+        <td>{{t.given_person}}</td>
+        <td>{{t.notes}}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+  <hr class="my-5">
+  <div class="container mt-5">
+    <div class='row text-center'>
+      <div class="col-4 bg-dark text-light font-weight-bolder p-3">اجمالي موجودات المخزن / مطروح منه نثريات المنطقة</div>
+      <div class="col-8 font-weight-bolder  p-3">{{safe.money}}</div>
+    </div>
+
+  </div>
+  </div>
+
+  <script>
+    const navLinks = document.querySelectorAll(".nav-item")
+    for (link of navLinks){
+        link.classList.remove('active-link')
+    }
+    navLinks[3].classList.add('active-link');
+
+</script>
+
+{% endblock %}

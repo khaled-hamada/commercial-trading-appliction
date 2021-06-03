@@ -1,0 +1,124 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+
+</div>
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">العملاء</li>
+      <li class="breadcrumb-item">{{customer.name}}</li>
+      <li class="breadcrumb-item">تحصيل فاتورة</li>
+    </ol>
+  </nav>
+</div>
+
+
+<table class="table">
+    <thead class="thead-dark" >
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">رقم الفاتورة / التفاصيل</th>
+        <th scope="col">اسم المسلم</th>
+        <th scope="col">المبلغ الكلى</th>
+        <th scope="col">الخصم</th>
+        <th scope="col">المطلوب</th>
+
+        <th class="text-danger"> نسبة الخصم</th>
+
+        <th scope="col">ما تم دفعه</th>
+        <th scope="col">المتبقى</th>
+        <th scope="col">التاريخ</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {%if un_paid_bills %}
+        {%for pill in un_paid_bills%}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td><a href="{%url 'content:customer-bill-details' pill.id%}">{{pill.id}} - اضغط لرؤية التفاصيل</a></td>
+          <td><a href="{%url 'content:manager' pill.manager.id%}">{{pill.manager.user.first_name}}</a></td>
+          <td>{{pill.total_bill_cost}}</td>
+          <td>{{pill.total_discount}}</td>
+          <td>{{pill.required_amount}}</td>
+
+          <th class="text-danger">{% widthratio pill.total_discount  pill.total_bill_cost_ar  100 %}%</th>
+
+          <td>{{pill.given_amount}}</td>
+          <td>{{pill.remaining_amount}}</td>
+          <td>{{pill.date}}</td>
+
+        </tr>
+        {%endfor%}
+    {%endif%}
+    </tbody>
+  </table>
+
+    <hr class="my-5">
+    <!-- <div class="form-group row">
+        <label for="inputPassword"   class="col-sm-2 font-weight-bold col-form-label">صورة الفاتورة</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+          <input type="file" name="bill_file" value="" form="form_sell" required>
+          </div>
+        </div>
+    </div>
+    <div class="form-group row text-info">
+        <label for="inputPassword"   class="col-sm-2 font-weight-bold col-form-label">اضافة ملاحظات</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <textarea class="form-control text-right" form="form_sell" name="notes" aria-label="With textarea" ></textarea>
+          </div>
+        </div>
+    </div> -->
+    <div class="container mt-5">
+      <div class='row text-center'>
+        <div class="col-3 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+        <div class="col-3 font-weight-bolder  p-3">{{customer.remaining_money}}</div>
+
+          <div class="col-3 bg-dark text-light font-weight-bolder p-3">المبلغ المدفوع</div>
+          <div class="col-3 font-weight-bolder  p-3">
+            <input type="number" name="total_money" form="form_sell" min ="0" max="{{customer.remaining_money}}" step=".01" class="form-control " placeholder="اكتب المبلغ مرة اخرى للتاكيد" required >
+          </div>
+
+        </div>
+
+
+      <div class='row text-center mt-5'>
+          <div class="col-3 bg-dark text-light font-weight-bolder p-3">الخصم ؟</div>
+          <div class="col-3 font-weight-bolder  p-3">
+            <input type="number" name="discount" form="form_sell" min ="0"  max="{{customer.remaining_money}}"  step=".01" class="form-control " placeholder="اكتب قيمة الخصم ان وجد" required >
+          </div>
+      </div>
+      </div>
+
+
+
+
+    <form method="post" id="form_sell" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="d-flex justify-content-around mt-4">
+          <button type="submit" class="btn btn-hover font-weight-bold px-5 ">اضافة</button>
+        </div>
+    </form>
+    <div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+      <a href="{%url 'content:customer-page' customer.id %}">
+          <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+      </a>
+      </div>
+
+    {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+      خطأ لم يتم تحديث البيانات . تأكد من  المبلغ
+    </div>
+    {%elif success %}
+    <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+      تم حفظ البيانات
+    </div>
+    {% endif %}
+
+{%endblock%}

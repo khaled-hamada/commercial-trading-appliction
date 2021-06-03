@@ -1,0 +1,255 @@
+{% extends './base.html' %}
+
+{% block content %}
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">التجار</li>
+      <li class="breadcrumb-item">المورد</li>
+    </ol>
+  </nav>
+</div>
+
+<h2 style="padding-top: 10px;" class="text-right">بيانـات التاجــر</h2>
+
+<div class="trade-info text-right" >
+    <div class="info">
+        - <span>اســم التاجــر: </span> <span>{{trader_pdata.name}}</span>
+    </div>
+    <div class="info">
+        - <span> العنوان:</span> <span>{{trader_pdata.address}}</span>
+    </div>
+    <div class="info">
+       - <span> رقم الهاتف:</span> <span>{{trader_pdata.phone_number}}</span>
+    </div>
+    <div class="info">
+       - <span> تاريخ بداية التعامل مع المنطقــة:</span> <span>{{trader_pdata.date.date}}</span>
+    </div>
+    <div class="info font-weight-bold text-danger">
+       - <span> مديونية التاجــر : </span> <span>{{trader_pdata.remaining_money}}</span>
+    </div>
+
+    <div class="info">
+      -  <span> أسماء البضائع الموردة:</span>
+       <span>
+         {%for tp in trader_products%}
+          <a href="{%url 'content:product_page' tp.id%}">{{tp.name}}-</a>
+         {%endfor%}
+       </span>
+    </div>
+</div>
+  {%if user.groups.first.name == "managers"%}
+<div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+  <div class="mx-2 ">
+      <a href="{%url 'content:give_payment' trader_pdata.id%}">
+          <button class="btn btn-hover font-weight-bold px-5">دفــع فاتـــورة</button>
+      </a>
+      </div>
+
+        <div class="mx-2 ">
+            <a class="btn btn-hover font-weight-bold px-5" href="{%url 'content:update_product' trader_pdata.id%}">اضافة فاتورة</a>
+        </div>
+        <div class="">
+          <a href="{%url 'content:restore_trader_product_store' trader_pdata.id  %}">
+              <button class="btn y btn-danger font-weight-bold px-5 mx-2">استرجاع فاتورة</button>
+          </a>
+          </div>
+        <div class="">
+          <a href="{%url 'content:restore_trader_given_bill' trader_pdata.id  %}">
+              <button class="btn y btn-info font-weight-bold px-5 mx-2"> تحصيــــل ثمن فاتورة مسترجعة</button>
+          </a>
+          </div>
+
+
+
+            <div class="">
+              <a href="{%url 'content:add_money_dept' trader_pdata.id  %}">
+                  <button class="btn y btn-warning font-weight-bold px-5 mx-2">اضافة سلفــة نقديـــة</button>
+              </a>
+            </div>
+
+        <div class="">
+          <a href="{%url 'content:Debts'  %}">
+              <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+          </a>
+          </div>
+
+  </div>
+  {%endif%}
+{% endblock %}
+{% block content_2 %}
+<div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+
+
+<h2 style="padding-top: 10px;" class="text-right">فواتيــر التاجــر -- المدفوعة</h2>
+
+<table class="table">
+    <thead >
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">التاريخ</th>
+        <th scope="col">اسم المسلم</th>
+        <th scope="col">المبلغ</th>
+        <th scope="col">ملاحظات</th>
+        <th scope="col">صورة الفاتورة</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%if trader_pills %}
+        {%for pill in trader_pills%}
+        {%if pill.sender %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{pill.date}}</td>
+
+          <td><a href="{%url 'content:manager' pill.sender.id%}">{{pill.sender.user.first_name}}</a></td>
+          <td>{{pill.amount}}</td>
+          <td>{{pill.notes}}</td>
+          {%if pill.bill_file %}
+          <td><a target="_blank" href="{{ pill.bill_file.url }}" class="text-danger"> معاينة الفاتورة
+          </a></td>
+          {%endif%}
+        </tr>
+        {%endif%}
+        {%endfor%}
+    {%endif%}
+    </tbody>
+  </table>
+
+
+  </div>
+{% endblock %}
+{% block content_3 %}
+<div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+<h2 style="padding-top: 10px;" class="text-right">معامــلات التاجــر - بضائع واردة للمخزن</h2>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">التاريخ</th>
+        <th scope="col">اسم الصنف</th>
+        <th scope="col">الكمية بالكرتونة</th>
+        <th scope="col">الكمية بالقطعة</th>
+        <th scope="col">التكلفة الكلية</th>
+        <!-- <th scope="col">المبلغ المدفوع</th> -->
+        <th scope="col">المبلغ المتبقى</th>
+        <th scope="col">الخصم</th>
+        <th scope="col">النسبة المئوية</th>
+
+        <th scope="col"> اسم المسؤل عن الكانتين</th>
+        <th scope="col">الحالة</th>
+        <th scope="col">صورة الفانورة</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%if trader_transactions %}
+        {%for transaction in trader_transactions%}
+        {%if transaction.manager %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{transaction.date}}</td>
+          <td>{{transaction.product.name}}</td>
+          <td>{{transaction.quantity_packet}}</td>
+          <td>{{transaction.quantity}}</td>
+          <td>{{transaction.total_cost_old}}</td>
+          <td>{{transaction.total_cost}}</td>
+          <td>{{transaction.discount}}</td>
+          <th class="text-danger">{% widthratio transaction.discount  transaction.total_cost_old  100 %}%</th>
+          <!-- <td>{{transaction.manager.user.first_name}}</td> -->
+          <td><a href="{%url 'content:manager' transaction.manager.id%}">{{transaction.manager.user.first_name}}</a></td>
+          {%if transaction.given_status == 1%}
+              <td class="text-primary">تم الدفــع</td>
+          {%else%}
+              <td class="text-danger">لم يتم الدفع</td>
+          {%endif%}
+          {%if transaction.bill_file %}
+          <td><a target="_blank" href="{{ transaction.bill_file.url }}" class="text-danger"> معاينة الفاتورة
+          </a></td>
+          {%endif%}
+        </tr>
+        {%endif%}
+        {%endfor%}
+      {%endif%}
+    </tbody>
+  </table>
+
+    </div>
+{% endblock %}
+
+
+{% block content_4 %}
+<div class=" container bg-light mt-5 shadow-lg rounded px-5 pb-5 mb-5">
+<h2 style="padding-top: 10px;" class="text-right">فواتير التاجر المسترجعة</h2>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">التاريخ</th>
+        <th scope="col">اسم الصنف</th>
+        <th scope="col">الكمية بالقطعة</th>
+        <th scope="col">التكلفة الكلية</th>
+
+
+
+        <th scope="col">ما تم دفعه</th>
+        <th scope="col">المتبقى</th>
+        <!-- <th scope="col">صورة الفانورة</th> -->
+
+          <th scope="col">الخصم</th>
+          <th scope="col" class="text-danger"> نسبة الخصم</th>
+
+
+          <th scope="col">الحالة</th>
+        <th scope="col"> اسم المسؤل عن الكانتين</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%if trader_restores %}
+        {%for rs in trader_restores%}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{rs.date}}</td>
+          <td>{{rs.product.name}}</td>
+          <td>{{rs.total_quantity_pieces}}</td>
+
+          <td>{{rs.total_cost}}</td>
+          <!-- <td>{{transaction.manager.user.first_name}}</td> -->
+          <!-- <td><a href="{%url 'content:manager' rs.manager.id%}">{{rs.manager.user.first_name}}</a></td> -->
+
+          <td>{{rs.given_amount}}</td>
+          <td>{{rs.remaining_amount}}</td>
+
+
+          <td>{{rs.discount}}</td>
+          <th class="text-danger">{% widthratio rs.discount  rs.total_cost  100 %}%</th>
+
+          <!-- {%if rs.bill_file %}
+          <td><a target="_blank" href="{{ transaction.bill_file.url }}" class="text-danger"> معاينة الفاتورة
+          </a></td>
+          {%endif%} -->
+          {%if rs.given_status == 1%}
+              <td class="text-primary">تم الاسترجاع</td>
+          {%else%}
+              <td class="text-danger">لم يتم الاسترجاع</td>
+          {%endif%}
+            <td>{{rs.manager.user.first_name}}</a></td>
+        </tr>
+        {%endfor%}
+    {%endif%}
+    </tbody>
+  </table>
+
+    </div>
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[6].classList.add('active-link');
+
+    </script>
+{% endblock %}

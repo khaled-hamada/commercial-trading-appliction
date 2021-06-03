@@ -1,0 +1,129 @@
+{% extends './base.html' %}
+{% block content %}
+
+<form method="post">
+  {%csrf_token%}
+  <div class="container select-date-big text-center font-weight-bold p-3 mb-4">
+    <div class="input-group ">
+      <div class="input-group-prepend">
+        <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm"> من تاريخ </span>
+      </div>
+      <input type="date" name="from_date" class="form-control rounded-0" aria-label="Sizing example input"
+        aria-describedby="inputGroup-sizing-sm" required>
+
+
+      <div class="input-group-prepend mr-2">
+        <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm">الى تاريخ</span>
+      </div>
+      <input type="date" name="to_date" class="form-control rounded-0" aria-label="Sizing example input"
+        aria-describedby="inputGroup-sizing-sm" required>
+
+      <button class="d-none" type="submit"></button>
+    </div>
+  </div>
+</form>
+<!--
+<div class="row mt-5 justify-content-center">
+    <a href="{%url 'content:add_new_sellings'%}">
+        <button class="btn btn-hover font-weight-bold px-5">اضافة مبيعـــات</button>
+    </a>
+</div> -->
+<div class="table-container-big">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+
+         <th scope="col">#</th>
+          <th scope="col">الصنف</th>
+          <th scope="col">عدد قطع مباع</th>
+          <th scope="col">اجمالى شراء</th>
+          <th scope="col">الاجمالى البيع قبل الخصم</th>
+          <th scope="col">اجمالى الخصم</th>
+          <th scope="col">الاجمالى البيع بعد الخصم</th>
+          <th scope="col">الربح</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {%for tra in transactions%}
+      <tr>
+         <th scope="row">{{forloop.counter}}</th>
+        <td>{{tra.0}}</td>
+        <td>{{tra.1}}</td>
+        <!-- <td>{{tra.2}}</td> -->
+        <td class="text-primary">{{tra.2}}</td>
+
+        <td>{{tra.3}}</td>
+        <!-- <td>{{tra.5}}</td> -->
+        <td  class="text-primary"> {{tra.4}}</td>
+        <td  class="text-primary"> {{tra.5}}</td>
+        <td  class="text-primary"> {{tra.6}}</td>
+
+        <!-- <td class="text-primary">{{tra.5}}</td>
+
+        <td>{{tra.6}}</td>
+        <td>{{tra.7}}</td>
+        <td class="text-primary">{{tra.8}}</td>
+
+        <td class="text-primary">{{tra.9}}</td> -->
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+
+
+  <!-- <hr class="my-5"> -->
+
+  <div class="container mt-5">
+    <div class='row text-center'>
+        <div class="col-2 bg-dark text-light font-weight-bolder d-flex align-items-center justify-content-center p-3">الاجمالي</div>
+        <div class="col font-weight-bolder">
+            <table class="table m-0">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">الشراء</th>
+                        <th scope="col">البيع قبل الخصم</th>
+                        <th scope="col">الخصومات الاساسية</th>
+                        <th scope="col" class="text-danger font-weight-bold">الخصومات الاضافية بعد البيع</th>
+                        <th scope="col" class="text-danger font-weight-bold">اجمالى الخصومات</th>
+                        <th scope="col" class="text-danger"> نسبة الخصم</th>
+                        <th scope="col">البيع بعد الخصم</th>
+                        <th scope="col">الربح</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="col">{{totals.0}}</th>
+                      <th scope="col">{{totals.1}}</th>
+                      <th scope="col">{{totals.3}}</th>
+                      <th scope="col" class="text-danger font-weight-bold">{{totals.5}}</th>
+                      <th scope="col" class="text-danger font-weight-bold">{{totals.6}}</th>
+                      <th class="text-danger">{% widthratio  totals.6   totals.1   100 %}%</th>
+
+                      <th scope="col">{{totals.4}}</th>
+                      <th scope="col">{{totals.2}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+  </div>
+      </div>
+
+
+
+
+  <script>
+    const navLinks = document.querySelectorAll(".nav-item")
+    for (link of navLinks){
+        link.classList.remove('active-link')
+    }
+    navLinks[2].classList.add('active-link');
+
+</script>
+
+
+
+{% endblock %}

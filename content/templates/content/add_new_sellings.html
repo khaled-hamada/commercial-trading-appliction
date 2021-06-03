@@ -1,0 +1,63 @@
+{% extends './base.html' %}
+{% block content %}
+
+<form method="post">
+  {% csrf_token %}
+  <div class="select-date text-center font-weight-bold p-3 mb-4">
+      <!-- <div class="input-group input-group-sm mb">
+          <div class="input-group-prepend">
+            <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm">تاريخ</span>
+          </div>
+          <input type="date" class="form-control rounded-0" name="date" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
+          <button class="d-none" type="submit"></button>
+      </div> -->
+  </div>
+
+
+    <div class="form-group row">
+        <label for="products" class="col-sm-2 font-weight-bold col-form-label">اســـم المنتــــج</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <select class="form-control" id="quantity" name= "product_id" aria-label="Amount (to the nearest dollar)" required>
+              {%for  product in products %}
+                <option value="{{product.id}}">{{product.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">الكمية</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="number"   name="quantity" class="form-control" id="quantity" aria-label="Amount (to the nearest dollar)" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">اجمالى النقدى اليوم</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="number" min="0.0" step=".01"  name="total_comings" class="form-control" id="quantity" aria-label="Amount (to the nearest dollar)" >
+        </div>
+      </div>
+    </div>
+
+
+    <div class="d-flex justify-content-around mt-4">
+      <button type="submit" class="btn btn-hover font-weight-bold px-5 ">اضافة</button>
+    </div>
+  </form>
+  {% if failed == 1 %}
+  <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+    خطأ لم يتم تحديث البيانات . تأكد من اسم المنتج و الكمية الصحيحة
+  </div>
+  {%elif success %}
+  <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+    تم حفظ البيانات
+  </div>
+  {% endif %}
+
+{% endblock %}

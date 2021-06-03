@@ -1,0 +1,57 @@
+{% extends './base.html' %}
+
+{% block content %}
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">السندوتشات </li>
+      <li class="breadcrumb-item">المخزن</li>
+    </ol>
+  </nav>
+</div>
+
+{%for type in data%}
+  {%for item in type %}
+    {%if item.total_quantity > 0 %}
+      <!-- <h2 style="padding-top: 10px;" class="text-right">بيانـات الصنف</h2> -->
+
+      <div class="trade-info text-right" >
+          <div class="info">
+              - <span>اســم الصنف :</span> <span>{{item.name}}</span>
+          </div>
+          <div class="info">
+              - <span>الكمية بالقطعة </span> <span class="text-primary font-weight-bold">{{item.total_quantity}}</span>
+          </div>
+          <!-- <div class="info">
+             - <span>سعر شراء</span> <span>{{trader_pdata.phone_number}}</span>
+          </div>
+          <div class="info">
+             - <span> تاريخ بداية التعامل مع المنطقــة:</span> <span>{{trader_pdata.date.date}}</span>
+          </div> -->
+          </div>
+          {%endif%}
+
+      {%endfor%}
+        <hr>
+{%endfor%}
+
+
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">اجمالي ثمن شراء البضاعة الموجودة</div>
+    <div class="col-4 font-weight-bolder  p-3">{{total_buy_all}}</div>
+
+  </div>
+
+</div>
+  <script>
+    const navLinks = document.querySelectorAll(".nav-item")
+    for (link of navLinks){
+        link.classList.remove('active-link')
+    }
+    navLinks[1].classList.add('active-link');
+
+  </script>
+
+{% endblock %}

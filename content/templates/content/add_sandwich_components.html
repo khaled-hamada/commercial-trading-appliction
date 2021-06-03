@@ -1,0 +1,101 @@
+{% extends './base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+</div>
+  <div class="form-group row">
+      <label for="products" class="col-sm-2 font-weight-bold col-form-label">اســـم المنتج</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <select class="form-control" id="search_list_sand"  aria-label="Amount (to the nearest dollar)" required>
+              <option value="">اختر اسم المنتج</option>
+              {%for type in types%}
+              <option value="{{type.id}}"  >{{type.name}}</option>
+              {%endfor%}
+          </select>
+        </div>
+      </div>
+  </div>
+{%for type in types%}
+  <div id="sand_{{type.id}}">
+    <form method="post" >
+        {% csrf_token %}
+
+        <input type="number" name="type_n_id" value="{{type.id}}"  style="display:None;">
+
+
+
+
+
+      <div class="form-group row text-danger">
+        <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">الكمية بالمخزن</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="text"  class="form-control text-danger"  value=" كمية قديمة -- {{ type.amount_old}}, كمية جديدة -- {{ type.amount_new }}" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row text-danger">
+        <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">سعر شراء العبوة كاملة </label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="text"  class="form-control text-danger"  value=" سعر قديم -- {{type.old_packet_cost }} , سعر جديد  -- {{type.new_packet_cost}}" readonly>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">الكمية الجديدة بالعبوات</label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" min="0"  step="1"   name="new_packet_q" class="form-control "   required>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label">سعر شراء العبوة الواحدة </label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" min="0"  step=".001"  name="packet_price"  class="form-control "   required>
+          </div>
+        </div>
+      </div>
+
+        <div class="form-group row">
+        <label for="staticEmail"    class="col-sm-2 font-weight-bold col-form-label"> عدد القطع فى العبوة الواحدة </label>
+        <div class="col-sm-10">
+          <div class="input-group mb-3">
+            <input type="number" min="1"  name="q_per_packet"   class="form-control "   required>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+      <div class="d-flex justify-content-around mt-4">
+        <button type="submit" class="btn btn-hover font-weight-bold px-5 ">اضافة</button>
+      </div>
+
+    </form>
+  </div>
+  {%endfor%}
+    {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+      خطأ لم يتم تحديث البيانات . تأكد من اسم المنتج و الكمية الصحيحة
+    </div>
+    {%elif success %}
+    <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+      تم حفظ البيانات
+    </div>
+    {% endif %}
+
+
+  {% endblock %}

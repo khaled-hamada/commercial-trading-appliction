@@ -1,0 +1,160 @@
+{% extends './base.html' %}
+
+{% block content %}
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+  <div class=" p-2 rounded">
+    </div>
+</div>
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">العملاء</li>
+      <li class="breadcrumb-item">{{customer.name}}</li>
+      <li class="breadcrumb-item">الفواتير</li>
+      <li class="breadcrumb-item"> تاكيد استرجاع فاتورة</li>
+    </ol>
+  </nav>
+</div>
+
+<!-- <form class=""  method="post" action="{%url 'content:restore-customer-bill' customer.id %}"">
+
+  {%csrf_token%}
+  <div class="form-group row">
+      <label for="products" class="col-sm-2 font-weight-bold col-form-label">رقم الفاتورة</label>
+      <div class="col-sm-6">
+        <div class="input-group mb-3">
+
+            <input type="number" name="bill_id"  min ="0"  class="form-control " placeholder="اكتب رقم الفاتورة" required >
+
+        </div>
+      </div>
+      <div class=" ">
+        <button type="submit" class="btn btn-sm btn-hover font-weight-bold px-5 ">بحث</button>
+      </div>
+  </div>
+
+</form> -->
+{% if bill %}
+
+<div class="row font-weight-bold justify-content-around mt-5">
+  <p>رقم الفاتورة : <span >{{bill.id}}</span></p>
+  <p>اسم العميل : <span class="font-weight-bold text-primary" >{{bill.customer.name}}</span></p>
+  <p>تاريخ الفاتورة: <span >{{bill.date}}</span></p>
+
+
+</div>
+<!-- <input type="number" name="bill_id"  form="form_sell_{{bill.id}}" value="{{bill.id}}"  style="display:None;">
+<input type="number" name="customer_id"  form="form_sell_{{bill.id}}" value="{{bill.customer.id}}"  style="display:None;"> -->
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">الصنف</th>
+        <!-- <th scope="col">ك.ق</th> -->
+        <th scope="col">ق.ق</th>
+        <!-- <th scope="col">ك.ج</th> -->
+        <th scope="col">ق.ج</th>
+        <th scope="col">سعر البيع</th>
+        <th scope="col">الخصم للقطعة</th>
+        <th scope="col">الخصم الكلى</th>
+
+        <th scope="col">الاجمالي</th>
+        <th scope="col">المطلوب</th>
+        <th scope="col">اسم النقطة</th>
+
+
+        <!-- <th scope="col">اكتب الكمية المسترجعة</th> -->
+
+        <th scope="col" class="text-danger">حذف من الفاتورة المسترجعة</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {%for pps in bill.all_lines%}
+        {%if pps.line_type == 1  or pps.restored_amount == pps.total_quantity%}
+          <tr class="text-danger  font-weight-bold">
+        {%else%}
+          <tr>
+        {%endif%}
+          <th scope="row">{{forloop.counter}}</th>
+
+          <td>{{pps.product.name}}</td>
+          <!-- <td>{{pps.quantity_packet_old}}</td> -->
+          <td>{{pps.quantity_old}}</td>
+          <!-- <td>{{pps.quantity_packet_new}}</td> -->
+          <td>{{pps.quantity_new}}</td>
+          <td>{{pps.product.unit_sell_price}}</td>
+          <td>{{pps.discount_per_unit}}</td>
+          <td>{{pps.total_discount}}</td>
+          <td>{{pps.money_quantity_sell}}</td>
+          <td>{{pps.required_amount}}</td>
+          <td>{{pps.Point.name}}</td>
+          <td > <a class="text-danger" href="{%url 'content:delete-restored-customer-bill-line' pps.id %}">حذف من الفاتورة المسترجعة ؟</a> </td>
+
+
+
+
+        </tr>
+        {%endfor%}
+
+
+    </tbody>
+
+
+</table>
+
+    <div class="container">
+    <div class='row text-center'>
+
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">تكلفة الفاتورة</th>
+          <th scope="col">الخصم</th>
+          <th scope="col">القيمة</th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <th scope="col">{{bill.total_bill_cost}}</th>
+          <th scope="col">{{bill.total_discount}}</th>
+          <th scope="col">{{bill.required_amount}}</th>
+
+        </tr>
+      </tbody>
+    </table>
+
+
+      </div>
+    </div>
+
+{%endif%}
+
+
+
+
+
+
+<form method="post"  >
+    {% csrf_token %}
+    <div class="d-flex justify-content-around mt-4">
+      <button type="submit" class="btn btn-danger  font-weight-bold px-5 ">استرجاع</button>
+    </div>
+</form>
+
+
+<div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+  <a href="{%url 'content:customer-page' customer.id %}">
+      <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+  </a>
+  </div>
+
+
+
+
+{% endblock %}

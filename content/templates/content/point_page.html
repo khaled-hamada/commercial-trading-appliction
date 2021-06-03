@@ -1,0 +1,392 @@
+{% extends './base.html' %}
+{% block content %}
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+  <div class="bg-light p-2 rounded">
+    {{point.name}}
+  </div>
+</div>
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">النقاط</li>
+      <li class="breadcrumb-item">{{point.name}}</li>
+    </ol>
+  </nav>
+</div>
+
+<div class="form-group row">
+  <label for="inputPassword" class="col-sm-3 font-weight-bold col-form-label">اجمالي البضاعة الموجودة</label>
+  <div class="col-sm-9">
+  <div class="input-group mb-3">
+      <span  class="form-control text-right" id="price-for-unit" aria-label="Amount (to the nearest dollar)">{{all_products_count}}   صنف</span>
+  </div>
+  </div>
+</div>
+
+
+<!-- start seperator -->
+<div style="border-top: 7px solid #1abc9c;" class="my-5"></div>
+<!-- end seperator -->
+
+<div class="row font-weight-bold justify-content-around mt-5">
+  <p>مبيعات النقطة عن يوم : <span class="today-date"></span></p>
+    {%if user.groups.first.name == "managers"%}
+  <a href="{%url 'content:add_new_point_sellings' point.id%}">
+    <button class="btn btn-hover font-weight-bold px-2">تسجيل  مبيعات النقطة</button>
+  </a>
+
+    <a href="{%url 'content:add_new_point_payments' point.id%}">
+          <button class="btn btn-hover font-weight-bold px-2">تسجيل مدفوعات نقطة</button>
+    </a>
+    <!-- <a href="{%url 'content:add_new_point_payments' point.id%}">
+          <button class="btn btn-hover font-weight-bold px-2">تسجيل فاتورة عميل</button>
+    </a> -->
+    <div class="">
+      <a href="{%url 'content:points'  %}">
+          <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+      </a>
+      </div>
+    {%endif%}
+</div>
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">الصنف</th>
+        <th scope="col">ك.ق</th>
+        <th scope="col">ق.ق</th>
+        <th scope="col">ك.ج</th>
+        <th scope="col">ق.ج</th>
+        <th scope="col">سعر البيع</th>
+        <th scope="col">الخصم للقطعة</th>
+        <th scope="col">الخصم الكلى</th>
+
+        <th scope="col">الاجمالي</th>
+        <th scope="col">المطلوب</th>
+        <th scope="col" class="text-danger"> نسبة الخصم</th>
+
+        <th scope="col" class="text-danger">الكمية المسترجعة</th>
+        <th scope="col" class="text-danger">الكمية المباعة</th>
+        <th scope="col">تاريخ الفاتورة</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for bill in bills %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+
+        <td>{{bill.product.name}}</td>
+        <td>{{bill.quantity_packet_old}}</td>
+        <td>{{bill.quantity_old}}</td>
+        <td>{{bill.quantity_packet_new}}</td>
+        <td>{{bill.quantity_new}}</td>
+        <td>{{bill.product.unit_sell_price}}</td>
+        <td>{{bill.discount_per_unit}}</td>
+        <td>{{bill.total_discount}}</td>
+        <td>{{bill.money_quantity_sell}}</td>
+        <td>{{bill.required_amount}}</td>
+        <th class="text-danger">{% widthratio bill.total_discount  bill.money_quantity_sell  100 %}%</th>
+
+
+        <td>{{bill.restored_amount}}</td>
+        <td>{{bill.total_quantity_sold}}</td>
+
+        <td>{{bill.date}}</td>
+
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+    <div class="col-8 font-weight-bolder  p-3">{{total_sellings}}</div>
+  </div>
+
+</div>
+
+<!-- start seperator -->
+<div style="border-top: 7px solid #1abc9c;" class="my-5"></div>
+<!-- end seperator -->
+
+<div class="row text-danger font-weight-bold justify-content-around mt-5">
+  <p>فواتير مسترجعة اليوم  <span class="today-date"></span></p>
+</div>
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">الصنف</th>
+        <th scope="col">ك.ق</th>
+        <th scope="col">ق.ق</th>
+        <th scope="col">ك.ج</th>
+        <th scope="col">ق.ج</th>
+        <th scope="col">سعر البيع</th>
+        <th scope="col">الخصم للقطعة</th>
+        <th scope="col">الخصم الكلى</th>
+
+        <th scope="col">الاجمالي</th>
+        <th scope="col text-danger">قيمة المسترجع</th>
+
+        <th scope="col" class="text-danger">الكمية المسترجعة</th>
+        <th scope="col" class="text-danger">الكمية المباعة</th>
+        <th scope="col">تاريخ الفاتورة</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for bill in restored_bills %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+
+        <td>{{bill.product.name}}</td>
+        <td>{{bill.quantity_packet_old}}</td>
+        <td>{{bill.quantity_old}}</td>
+        <td>{{bill.quantity_packet_new}}</td>
+        <td>{{bill.quantity_new}}</td>
+        <td>{{bill.product.unit_sell_price}}</td>
+        <td>{{bill.discount_per_unit}}</td>
+        <td>{{bill.total_discount}}</td>
+        <td>{{bill.money_quantity_sell}}</td>
+        <td>{{bill.required_amount}}</td>
+
+
+        <td>{{bill.restored_amount}}</td>
+        <td>{{bill.restored_amount_cost_ad}}</td>
+
+        <td>{{bill.date}}</td>
+
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-3 bg-dark text-light font-weight-bolder p-3">الاجمالي بيع بعد الخصم</div>
+    <div class="col-3 font-weight-bolder  p-3">{{restored_total_bills_sell}}</div>
+    <div class="col-3 bg-dark text-light font-weight-bolder p-3">الاجمالي شراء</div>
+    <div class="col-3 font-weight-bolder  p-3">{{restored_total_bills_buy}}</div>
+  </div>
+
+<!-- start seperator -->
+
+<!-- start section seperator -->
+<div>
+  <div class="select-date text-center font-weight-bold p-3 mb-4" style="position: relative;
+  top: 60px;">
+      <div class="bg-light p-2 rounded">
+        <p>البضائع المسحوبة عن يوم : <span class="today-date"></span></p>
+      </div>
+  </div>
+
+  <div style="border-top: 7px solid #1abc9c;"></div>
+
+  <form method="post">
+    {%csrf_token%}
+    <div class="container select-date-big text-center font-weight-bold p-3 mb-4">
+      <div class="input-group ">
+        <div class="input-group-prepend">
+          <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm"> من تاريخ </span>
+        </div>
+        <input type="date" name="from_date" class="form-control rounded-0" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" required>
+
+
+        <div class="input-group-prepend mr-2">
+          <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm">الى تاريخ</span>
+        </div>
+        <input type="date" name="to_date" class="form-control rounded-0" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" required>
+
+        <button class="d-none" type="submit"></button>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- end section seperator -->
+<!-- end seperator -->
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">الصنف</th>
+        <th scope="col">ك.ق</th>
+        <th scope="col">ق.ق</th>
+        <th scope="col">ك.ج</th>
+        <th scope="col">ق.ج</th>
+
+        <th scope="col">الاجمالي</th>
+        <th scope="col">تاريخ الفاتورة</th>
+        <th scope="col">ملاحظات</th>
+       <!--  <th scope="col">حالة الفاتورة</th> -->
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for bill in today_point_products %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+
+        <td>{{bill.product.name}}</td>
+        <td>{{bill.quantity_packet_old}}</td>
+        <td>{{bill.quantity_old}}</td>
+        <td>{{bill.quantity_packet_new}}</td>
+        <td>{{bill.quantity_new}}</td>
+        <td>{{bill.money_quantity}}</td>
+        <td>{{bill.date}}</td>
+        <td>{{bill.notes}}</td>
+      <!--  {%if bill.given_status == 1%}
+          <td class="text-primary">تم التسليم</td>
+        {%else%}
+          <td class="text-danger">لم يتم التسليم</td>
+        {%endif%} -->
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+    <div class="col-8 font-weight-bolder  p-3">{{today_dept}}</div>
+  </div>
+
+</div>
+
+
+<!-- start section seperator -->
+<div>
+  <div class="select-date text-center font-weight-bold p-3 mb-4" style="position: relative;
+  top: 60px;">
+      <div class="bg-light p-2 rounded">
+        البضائع الموجودة بالنقطة حتى الآن
+      </div>
+
+
+  </div>
+
+  <div style="border-top: 7px solid #1abc9c;"></div>
+</div>
+<!-- end section seperator -->
+<div class="mt-5">
+  {%if user.groups.first.name == "managers"%}
+    <a href="{%url 'content:restore_point_product_store' point.id%}">
+      <button class="btn btn-danger font-weight-bold px-5">استرجاع بضاعة للمخزن</button>
+    </a>
+    <a href="{%url 'content:point_to_point_product' point.id%}">
+      <button class="btn btn-warning font-weight-bold px-5">نقل بضاعة من نقطة لاخرى</button>
+    </a>
+
+  {%endif%}
+</div>
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">الصنف</th>
+        <th scope="col">الكمية بالقطعة</th>
+        <th scope="col">سعر الشراء</th>
+        <th scope="col">تفاصيل الصنف بالنقطة</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in all_products %}
+        {%if p.total_product_quantity == 0%}
+          <tr class="text-danger font-weight-bold">
+        {%else%}
+          <tr>
+        {%endif%}
+          <th scope="row">{{forloop.counter}}</th>
+
+          <td>{{p.product.name}}</td>
+          <td>{{p.total_product_quantity}}</td>
+          <td>{{p.total_cost}}</td>
+          <td> <a href="{% url 'content:point-total-product' p.id %}"> اضغط لرؤية تفاصيل الصنف  </a></td>
+        </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+    <div class="col-8 font-weight-bolder  p-3">{{total_dept}}</div>
+  </div>
+
+</div>
+
+
+<!-- start section seperator -->
+<div>
+  <div class="select-date text-center font-weight-bold p-3 mb-4" style="position: relative;
+  top: 60px;">
+      <div class="bg-light p-2 rounded">
+        فواتير النقطة حتى الآن
+      </div>
+  </div>
+
+  <div style="border-top: 7px solid #1abc9c;"></div>
+</div>
+<!-- end section seperator -->
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">المبلغ</th>
+        <th scope="col">المستلم</th>
+        <th scope="col">التاريخ</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for bill in all_bills %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{bill.amount}}</td>
+        <td>{{bill.t_user}}</td>
+        <td>{{bill.date}}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+    <div class="col-8 font-weight-bolder  p-3">{{bills_amount}}</div>
+  </div>
+
+</div>
+
+    {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+      خطأ لم يتم تحديث البيانات . تأكد من اسم المنتج و الكمية الصحيحة
+    </div>
+    {%elif success %}
+    <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+      تم حفظ البيانات
+    </div>
+    {% endif %}
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[7].classList.add('active-link');
+
+    </script>
+
+
+{%endblock%}

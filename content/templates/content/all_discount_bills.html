@@ -1,0 +1,63 @@
+{% extends './base.html' %}
+{% block content %}
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+  <div class="bg-light p-2 rounded">
+    {{point.name}}
+  </div>
+</div>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">رقم الفاتورة / التفاصيل</th>
+        <th scope="col">اسم النقطة</th>
+        <th scope="col">العميل</th>
+
+        <th scope="col">ثمن الفاتورة</th>
+        <th scope="col">الخصم</th>
+        <th scope="col">المدفوع</th>
+        <th class="text-danger"> نسبة الخصم</th>
+
+
+        <th scope="col">تاريخ الفاتورة</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for bill in bills %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+
+        <td><a href="{%url 'content:customer-bill-details' bill.id%}">{{pill.id}} - اضغط لرؤية التفاصيل</a></td>
+        <td>{{bill.point.name}}</td>
+        <td>{{bill.customer.name}}</td>
+
+
+        <td>{{bill.total_bill_cost_ar}}</td>
+        <td>{{bill.total_discount}}</td>
+        <td>{{bill.required_amount}}</td>
+        <th class="text-danger">{% widthratio bill.total_discount  bill.total_bill_cost_ar  100 %}%</th>
+
+
+        <td>{{bill.date}}</td>
+
+      </tr>
+      {% endfor %}
+
+    </tbody>
+</table>
+
+<hr class="my-5">
+<div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+    <div class="col-8 font-weight-bolder  p-3">{{total_discounts}}</div>
+  </div>
+
+</div>
+
+
+
+{%endblock%}

@@ -1,0 +1,582 @@
+{% extends './base.html' %}
+{% block a_unique_name %}
+
+
+
+<style>
+  .custom_grid {
+    display: grid;
+    grid-template-columns: 27vw 1fr;
+    grid-gap: 20px;
+    margin: 20px;
+    margin-top: 0;
+  }
+
+  .side_grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 20px;
+  }
+
+  .content_grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 20px;
+  }
+
+  .content_grid_top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+  }
+
+  .content_grid_bottom {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 20px;
+  }
+
+  a {
+    color: black;
+  }
+
+  a:hover {
+    color: darkblue;
+  }
+
+  #nav-tab {
+    background-color: #1abc9c;
+  }
+
+  table {
+    margin-top: 0;
+  }
+
+  .table-container {
+    overflow-y: scroll;
+    height: 300px;
+    padding: 0 5px;
+  }
+
+  .table-container::-webkit-scrollbar {
+    width: .25em;
+  }
+
+  body::-webkit-scrollbar {
+    width: .5em;
+  }
+
+  body::-webkit-scrollbar-track,
+  .table-container::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  body::-webkit-scrollbar-thumb,
+  .table-container::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid 1abc9c;
+  }
+</style>
+
+<form method="post">
+  {%csrf_token%}
+  <div class="container select-date-big text-center font-weight-bold p-3 mb-4">
+    <div class="input-group ">
+      <div class="input-group-prepend">
+        <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm"> من تاريخ </span>
+      </div>
+      <input type="date" name="from_date" class="form-control rounded-0" aria-label="Sizing example input"
+        aria-describedby="inputGroup-sizing-sm" required>
+
+
+      <div class="input-group-prepend mr-2">
+        <span class="input-group-text font-weight-bold rounded-0" id="inputGroup-sizing-sm">الى تاريخ</span>
+      </div>
+      <input type="date" name="to_date" class="form-control rounded-0" aria-label="Sizing example input"
+        aria-describedby="inputGroup-sizing-sm" required>
+
+      <button class="d-none" type="submit"></button>
+    </div>
+  </div>
+</form>
+<div class="custom_grid">
+
+  <div class="side_grid">
+    <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+      <div class="select-date text-center font-weight-bold p-3 mb-4">
+        <div class="bg-light p-2 rounded">
+          نثريات السيد المدير اليوم
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">التاريخ</th>
+
+              <th scope="col">المبلغ</th>
+              <th scope="col">الغرض المنصرف من أجله</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in transactions %}
+            <tr>
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{t.day}}</td>
+
+              <td>{{t.money_amount}}</td>
+              <td>{{t.descreption}}</td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="my-5">
+
+      <div class="container mt-5">
+        <div class='row text-center'>
+          <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+          <div class="col-8 font-weight-bolder  p-3">{{total_tr_money}}</div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+      <div class="select-date text-center font-weight-bold p-3 mb-4">
+        <div class="bg-light p-2 rounded">
+          معاملات الخزنة اليوم
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+
+              <th scope="col">المبلغ</th>
+              <th scope="col">المسلم</th>
+              <th scope="col-3">ملاحظات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in safe %}
+            {% if t.money_amount <= 0 %}
+              <tr class="text-danger  font-weight-bold">
+            {%else%}
+              <tr>
+            {%endif%}
+              <th scope="row">{{forloop.counter}}</th>
+
+              <td>{{t.money_amount}}</td>
+              <td>{{t.given_person}}</td>
+              <td>{{t.notes}}</td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+      <hr class="my-5">
+      <div class="container mt-5">
+        <div class='row text-center'>
+          <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+          <div class="col-8 font-weight-bolder  p-3">{{total_s}}</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="content_grid">
+
+
+    <div class="content_grid_top">
+  <div class="side_grid">
+        <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+          <div class="select-date text-center font-weight-bold p-3 mb-4">
+            <div class="bg-light p-2 rounded">
+              قيمة الفواتير الواردة من العملاء اليوم  - توريدات
+
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <!-- <th scope="col">رقم الفاتورة / التفاصيل</th> -->
+                  <th scope="col">المستلم</th>
+                  <th scope="col">اسم المسلم</th>
+
+
+                  <th scope="col">المبلغ المدفوع</th>
+                  <!-- <th scope="col">الخصم</th> -->
+
+                  <th scope="col">التاريخ</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in paid_given_bill %}
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                    <td><a href="{%url 'content:manager' bill.t_user.id%}">{{bill.t_user.user.first_name}}</a></td>
+                  <td>{{bill.g_user.name}}</td>
+                  <td>{{bill.amount}}</td>
+                  <!-- <td>{{bill.discount}}</td> -->
+                  <td>{{bill.date}}</td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+          <hr class="my-5">
+          <div class="container mt-5">
+            <div class='row text-center'>
+              <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+              <div class="col-8 font-weight-bolder  p-3">{{total_amount_given}}</div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+          <div class="select-date text-center font-weight-bold p-3 mb-4">
+            <div class="bg-light p-2 rounded">
+              قيمة الفواتير المسترجعة من العملاء اليوم--قيمة النقدى المدفوع للعملاء
+
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <!-- <th scope="col">رقم الفاتورة / التفاصيل</th> -->
+                  <th scope="col">المستلم</th>
+                  <th scope="col">اسم المسلم</th>
+
+
+                  <th scope="col">المبلغ المدفوع</th>
+                  <!-- <th scope="col">الخصم</th> -->
+
+                  <th scope="col">التاريخ</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in restored_paid_bills %}
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                    <td><a href="{%url 'content:manager' bill.t_user.id%}">{{bill.t_user.user.first_name}}</a></td>
+                  <td>{{bill.g_user.name}}</td>
+                  <td>{{bill.amount}}</td>
+                  <!-- <td>{{bill.discount}}</td> -->
+                  <td>{{bill.date}}</td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+          <hr class="my-5">
+          <div class="container mt-5">
+            <div class='row text-center'>
+              <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+              <div class="col-8 font-weight-bolder  p-3">{{total_amount_restored}}</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+  <div class="content_grid">
+
+
+  <div class="content_grid_top">
+      <div class="side_grid">
+        <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+          <div class="select-date text-center font-weight-bold p-3 mb-4">
+            <div class="bg-light p-2 rounded">
+              قيمة الفواتير الواردة من التجار للمخزن اليوم
+
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">اسم التاجر</th>
+
+                  <th scope="col">المبلغ الكلى </th>
+                  <th scope="col">ما تم دفعه</th>
+                  <th scope="col">الباقى</th>
+                  <th scope="col">صورة الفاتورة</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in trader_bills %}
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                  <td><a href="{%url 'content:trader_page' bill.trader.id%}">{{bill.trader.name}}</a></td>
+
+                  <td>{{bill.total_cost_old}}</td>
+                  <td>{{bill.give_cost}}</td>
+                  <td>{{bill.total_cost}}</td>
+                  {%if bill.bill_file %}
+                  <td><a target="_blank" href="{{ bill.bill_file.url }}" class="text-danger"> معاينة الفاتورة
+                    </a></td>
+                  {%endif%}
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+          <hr class="my-5">
+          <div class="container mt-5">
+            <div class='row text-center'>
+              <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+              <div class="col-8 font-weight-bolder  p-3">{{trader_all}}</div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+          <div class="select-date text-center font-weight-bold p-3 mb-4">
+            <div class="bg-light p-2 rounded">
+              قيمة الفواتير المدفوعة للتجار اليوم
+
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">اسم التاجر</th>
+
+                  <th scope="col">تكلفة الفاتورة</th>
+
+                  <th scope="col">صورة الفاتورة</th>
+
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in trader_payments %}
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                  <td><a href="{%url 'content:trader_page' bill.reciever.id%}">{{bill.reciever.name}}</a></td>
+
+                  <td>{{bill.amount}}</td>
+
+                  {%if bill.bill_file %}
+                  <td><a target="_blank" href="{{ bill.bill_file.url }}" class="text-danger"> معاينة الفاتورة
+                    </a></td>
+                  {%endif%}
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+          <hr class="my-5">
+          <div class="container mt-5">
+            <div class='row text-center'>
+              <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+              <div class="col-8 font-weight-bolder  p-3">{{trader_payments_all}}</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div class="side_grid">
+
+
+        <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+          <div class="select-date text-center font-weight-bold p-3 mb-4">
+            <div class="bg-light p-2 rounded">
+              قيمة فواتير النقاط المسحوبة من المخزن اليوم
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">اسم النقطة</th>
+                  <th scope="col">اسم الصنف</th>
+                  <th scope="col">كمية قديم</th>
+                  <!-- <th scope="col">سعر ش ق</th> -->
+                  <th>التكلفة</th>
+                  <th scope="col">كمية جديد</th>
+                  <!-- <th scope="col">سعر ش ج</th> -->
+                  <th>التكلفة</th>
+                  <th scope="col">ثمن الفاتورة</th>
+                  <th scope="col">ملاحظات</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in points_bills %}
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                  <td><a href="{%url 'content:point_page' bill.Point.id%}">{{bill.Point.name}}</a></td>
+
+
+                  <td>{{bill.product.name}}</td>
+
+
+                  <td>{{bill.total_q_old}}</td>
+                  <td>{{bill.total_q_old_price}}</td>
+                  <!-- <td>{{bill.product.last_unit_by_price}}</td> -->
+
+                  <td>{{bill.total_q_new}}</td>
+                  <td>{{bill.total_q_new_price}}</td>
+                  <!-- <td>{{bill.product.unit_buy_price}}</td> -->
+
+                  <td>{{bill.money_quantity}}</td>
+                  <td>{{bill.notes}}</td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+          <hr class="my-5">
+          <div class="container mt-5">
+            <div class='row text-center'>
+              <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+              <div class="col-8 font-weight-bolder  p-3">{{points_all}}</div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div id="default_container" class="container bg-light shadow-lg rounded px-5 pb-5 m-0">
+          <div class="select-date text-center font-weight-bold p-3 mb-4">
+            <div class="bg-light p-2 rounded">
+              قيمة مبيعات   النقاط اليوم
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">النقطة</th>
+                  <th scope="col">العميل</th>
+
+                  <th scope="col">القمن قبل الخصم</th>
+                  <th scope="col">الخصم</th>
+                  <th scope="col">ثمن بعد الخصم</th>
+
+                  <th scope="col">المدفوع </th>
+                  <th scope="col">المتبقى</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in points_sellings %}
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                  {%if bill.point%}
+                    <td><a href="{%url 'content:point_page' bill.point.id%}">{{bill.point.name}}</a> </td>
+                  {%else%}
+                    <td> </td>
+                  {%endif%}
+                  <td><a href="{%url 'content:customer-page' bill.customer.id%}">{{bill.customer.name}}</a>
+                  </td>
+
+
+                  <td>{{bill.total_bill_cost_ar}}</td>
+                  <td>{{bill.total_discount}}</td>
+                  <td>{{bill.required_amount}}</td>
+
+                  <td>{{bill.given_amount}}</td>
+                  <td>{{bill.remaining_amount}}</td>
+
+
+                </tr>
+                {% endfor %}
+
+
+              </tbody>
+            </table>
+          </div>
+          <hr class="my-5">
+          <div class="container mt-5">
+            <div class='row text-center'>
+              <div class="col-2 bg-dark text-light font-weight-bolder p-3">اجمالى بيع قبل الخصم</div>
+              <div class="col-2 font-weight-bolder  p-3">{{points_sellings_bd}}</div>
+
+              <div class="col-2 bg-dark text-light font-weight-bolder p-3 ">بعد الخصم</div>
+              <div class="col-2 font-weight-bolder  p-3  ">{{points_sellings_ad}}</div>
+
+              <div class="col-2 bg-dark text-light font-weight-bolder p-3 text-danger">اجمالى خصومات</div>
+              <div class="col-2 font-weight-bolder  p-3  text-danger">{{total_discounts}}</div>
+
+
+            </div>
+
+            <div class='row text-center mt-5'>
+                <div class="col-3 bg-dark text-light font-weight-bolder p-3 text-danger">اجمالى ديون عملاء</div>
+                <div class="col-3 font-weight-bolder  p-3  text-danger">{{customers_depts}}</div>
+
+                <!-- <div class="col-2 bg-dark text-light font-weight-bolder p-3 text-danger">الاجمالي مسترجع</div>
+                <div class="col-2 font-weight-bolder  p-3  text-danger">{{points_paymnets_all}}</div> -->
+
+                <div class="col-3 bg-dark text-light font-weight-bolder p-3  text-primary">الصافى</div>
+                <div class="col-3 font-weight-bolder  p-3   text-primary">{{net_payments}}</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!--   side grid -->
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <script>
+    const navLinks = document.querySelectorAll(".nav-item")
+    for (link of navLinks) {
+      link.classList.remove('active-link')
+    }
+    navLinks[9].classList.add('active-link');
+
+  </script>
+
+  {%endblock%}

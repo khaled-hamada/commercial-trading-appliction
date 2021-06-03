@@ -1,0 +1,70 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+
+</div>
+
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">العملاء</li>
+            <li class="breadcrumb-item">{{customer.name}}</li>
+            <li class="breadcrumb-item">دفع مبلغ نقدى للعميل </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="container mt-5">
+          <div class='row text-center'>
+            <div class="col-3 bg-dark text-light font-weight-bolder p-3">المستحق للعميل</div>
+            {%if customer.remaining_money < 0 %}
+              <div class="col-3 font-weight-bolder  p-3">{{customer.remaining_money}}</div>
+            {%else%}
+                <div class="col-3 font-weight-bolder  p-3">{{0}}</div>
+            {%endif%}
+              <div class="col-3 bg-dark text-light font-weight-bolder p-3">المبلغ المدفوع</div>
+              <div class="col-3 font-weight-bolder  p-3">
+                <input type="number" name="total_money" form="form_sell" min ="0" step=".01" class="form-control " placeholder="اكتب المبلغ مرة اخرى للتاكيد" required >
+              </div>
+
+            </div>
+
+
+          <div class='row text-center mt-5'>
+              <div class="col-3 bg-dark text-light font-weight-bolder p-3">الخصم ؟</div>
+              <div class="col-3 font-weight-bolder  p-3">
+                <input type="number" name="discount" form="form_sell" min ="0" step=".01" class="form-control " placeholder="اكتب قيمة الخصم ان وجد" required >
+              </div>
+          </div>
+          </div>
+
+
+
+
+          <form method="post" id="form_sell" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="d-flex justify-content-around mt-4">
+              <button type="submit" class="btn btn-hover font-weight-bold px-5 ">اضافة</button>
+            </div>
+          </form>
+          <div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+          <a href="{%url 'content:customer-page' customer.id %}">
+              <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+          </a>
+      </div>
+
+
+
+
+    {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+      خطأ لم يتم تحديث البيانات . تأكد من  المبلغ
+    </div>
+    {%elif success %}
+    <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+      تم حفظ البيانات
+    </div>
+    {% endif %}
+
+{%endblock%}

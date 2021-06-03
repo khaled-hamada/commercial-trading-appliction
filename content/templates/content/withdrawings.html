@@ -1,0 +1,63 @@
+{% extends './base.html' %}
+{% block content %}
+
+
+<div class="row  font-weight-bold p-3 mb-4 justify-content-center">
+    {%if user.groups.first.name == "managers"%}
+  <div class=" ">
+
+      <a href="{%url 'content:withdrawings_transactions'%}">
+          <button class="btn btn-hover font-weight-bold px-5">إضافــة نثريـــة</button>
+      </a>
+      <a href="{%url 'content:delete_single_withdrawing'%}">
+          <button class="btn btn-danger font-weight-bold px-5 mr-4">حذف نثريـــة</button>
+      </a>
+  </div>
+  {%endif%}
+</div>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">التاريخ</th>
+
+        <th scope="col">المبلغ</th>
+        <th scope="col">الغرض المنصرف من أجله</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in transactions %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{t.day}}</td>
+
+        <td>{{t.money_amount}}</td>
+        <td>{{t.descreption}}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+  <hr class="my-5">
+
+  <div class="container mt-5">
+    <div class='row text-center'>
+      <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+      <div class="col-8 font-weight-bolder  p-3">{{total_tr_money}}</div>
+    </div>
+
+  </div>
+
+  <script>
+    const navLinks = document.querySelectorAll(".nav-item")
+    for (link of navLinks){
+        link.classList.remove('active-link')
+    }
+    navLinks[4].classList.add('active-link');
+
+</script>
+
+
+{% endblock %}

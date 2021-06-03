@@ -1,0 +1,144 @@
+{% extends './base.html' %}
+{% block content %}
+
+<div class="select-date text-center font-weight-bold p-3 mb-4">
+  <div class="bg-light p-2 rounded">
+    تفاصيل صنف <span class="text-danger">{{tpp.product.name}} </span> الموجود بنقطة <span class="text-danger">{{tpp.Point.name}}</span>
+  </div>
+</div>
+
+<div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">النقاط</li>
+      <li class="breadcrumb-item">{{tpp.Point.name}}</li>
+      <li class="breadcrumb-item">{{tpp.product.name}}</li>
+    </ol>
+  </nav>
+</div>
+
+
+    <div class="">
+      <a href="{%url 'content:point_page' tpp.Point.id %}">
+          <button class="btn y btn-hover font-weight-bold px-5 mx-2">رجوع</button>
+      </a>
+  </div>
+
+
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+
+        <th scope="col">كرتونة قديم</th>
+        <th scope="col">قطعة قديم</th>
+        <th scope="col">عدد القطع ف الكرتونة</th>
+        <th scope="col">عدد القطع الكلى قديم</th>
+        <th scope="col">سعر شراء قديم كرتونة</th>
+        <th scope="col">سعر شراء قديم قطعة</th>
+        <th scope="col">السعر الكلى شراء قديم</th>
+
+
+
+
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+
+        <td>{{tpp.last_quantity_packet}}</td>
+        <td>{{tpp.last_quantity}}</td>
+        <td>{{tpp.last_quantity_per_packet}}</td>
+        <td>{{tpp.old_amount}}</td>
+        <td>{{tpp.last_packet_price}}</td>
+        <td>{{tpp.last_unit_buy_price}}</td>
+        <td>{{tpp.old_amount_cost}}</td>
+
+
+        </tr>
+
+
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">كرتونة جديد</th>
+          <th scope="col">قطعة جديد</th>
+          <th scope="col">عدد القطع ف الكرتونة</th>
+          <th scope="col">عدد القطع الكلى جديد</th>
+          <th scope="col">سعر شراء جديد كرتونة</th>
+          <th scope="col">سعر شراء جديد قطعة</th>
+          <th scope="col">السعر الكلى شراء جديد</th>
+        </tr>
+
+        </thead>
+        <tr>
+          <td>{{tpp.quantity_packet}}</td>
+          <td>{{tpp.quantity}}</td>
+          <td>{{tpp.quantity_per_packet}}</td>
+          <td>{{tpp.new_amount}}</td>
+          <td>{{tpp.packet_price}}</td>
+          <td>{{tpp.unit_buy_price}}</td>
+          <td>{{tpp.new_amount_cost}}</td>
+
+
+          </tr>
+
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">الكمية الكلية بالقطعة</th>
+          <th scope="col">سعر البيع بالنقطة</th>
+          <th scope="col">السعر الكلى شراء</th>
+          <th scope="col">السعر الكلى بيع</th>
+          <th scope="col">اخر تحديث للمنتج من و إلى النقطة</th>
+    
+        </tr>
+
+        </thead>
+        <tr>
+
+          <td>{{tpp.total_product_quantity}}</td>
+          <td>{{tpp.product.unit_sell_price}}</td>
+          <td>{{tpp.total_cost}}</td>
+          <td>{{tpp.total_cost_sell}}</td>
+          <td>{{tpp.last_update}}</td>
+
+
+
+          </tr>
+
+    </tbody>
+</table>
+<hr class="my-5">
+<!-- <div class="container mt-5">
+  <div class='row text-center'>
+    <div class="col-4 bg-dark text-light font-weight-bolder p-3">الاجمالي</div>
+    <div class="col-8 font-weight-bolder  p-3">{{today_dept}}</div>
+  </div>
+
+</div> -->
+
+
+
+
+
+    {% if failed == 1 %}
+    <div class="alert alert-danger text-center mt-3 mb-0" role="alert">
+      خطأ لم يتم تحديث البيانات . تأكد من اسم المنتج و الكمية الصحيحة
+    </div>
+    {%elif success %}
+    <div class="alert alert-success text-center mt-3 mb-0" role="alert">
+      تم حفظ البيانات
+    </div>
+    {% endif %}
+
+    <script>
+      const navLinks = document.querySelectorAll(".nav-item")
+      for (link of navLinks){
+          link.classList.remove('active-link')
+      }
+      navLinks[7].classList.add('active-link');
+
+    </script>
+
+
+{%endblock%}
