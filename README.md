@@ -1,5 +1,8 @@
 # commercial-trading-appliction
-
+------------------------
+username: admin
+passowrd: admin
+---------------------
 A very big products store application with many selling points.
 this application consists mainly of six parts
 1. a big store of products
