@@ -1,4 +1,8 @@
 # commercial-trading-appliction
+------
+Videos describing how the app works :
+https://www.youtube.com/playlist?list=PLLgUY48AmUXXeBBd5eBlAbeLfqgFgRvyZ
+-----
 ------------------------
 username: admin
 passowrd: admin
